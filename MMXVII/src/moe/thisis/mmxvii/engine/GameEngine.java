@@ -1,5 +1,7 @@
 package moe.thisis.mmxvii.engine;
 
+import moe.thisis.mmxvii.game.Renderer;
+
 public class GameEngine implements Runnable {
 
     public static final int TARGET_FPS = 75;
@@ -37,6 +39,8 @@ public class GameEngine implements Runnable {
             gameLoop();
         } catch (Exception excp) {
             excp.printStackTrace();
+        } finally {
+        	cleanup();
         }
     }
 
@@ -70,7 +74,11 @@ public class GameEngine implements Runnable {
             }
         }
     }
-
+    
+    protected void cleanup() {
+    	gameLogic.cleanup();
+    }
+    
     private void sync() {
         float loopSlot = 1f / TARGET_FPS;
         double endTime = timer.getLastLoopTime() + loopSlot;

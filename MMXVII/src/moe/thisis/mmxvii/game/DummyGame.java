@@ -54,4 +54,8 @@ public class DummyGame implements IGameLogic {
         window.setClearColor(color, color, color, 0.0f);
         renderer.clear();
     }
+
+	/* (non-Javadoc)
+	 * @see moe.thisis.mmxvii.engine.IGameLogic#cleanup()
+	 */
 }

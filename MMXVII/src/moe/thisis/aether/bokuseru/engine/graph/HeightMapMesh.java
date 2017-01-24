@@ -3,7 +3,9 @@ package moe.thisis.aether.bokuseru.engine.graph;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.joml.Vector3f;
+
 import moe.thisis.aether.bokuseru.engine.Utils;
 
 public class HeightMapMesh {

@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
 
 public class FontTexture {

@@ -1,11 +1,11 @@
 package moe.thisis.aether.bokuseru.engine.items;
 
 import org.joml.Vector3f;
-import moe.thisis.aether.bokuseru.engine.items.GameItem;
+
 import moe.thisis.aether.bokuseru.engine.graph.Material;
 import moe.thisis.aether.bokuseru.engine.graph.Mesh;
-import moe.thisis.aether.bokuseru.engine.loaders.obj.OBJLoader;
 import moe.thisis.aether.bokuseru.engine.graph.Texture;
+import moe.thisis.aether.bokuseru.engine.loaders.obj.OBJLoader;
 
 public class SkyBox extends GameItem {
 

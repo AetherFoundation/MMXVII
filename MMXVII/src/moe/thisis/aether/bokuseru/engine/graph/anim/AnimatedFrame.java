@@ -1,6 +1,7 @@
 package moe.thisis.aether.bokuseru.engine.graph.anim;
 
 import java.util.Arrays;
+
 import org.joml.Matrix4f;
 
 public class AnimatedFrame {

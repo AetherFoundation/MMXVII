@@ -1,13 +1,24 @@
 package moe.thisis.aether.bokuseru.engine.sound;
 
+import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
+import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;
+import static org.lwjgl.openal.AL10.alBufferData;
+import static org.lwjgl.openal.AL10.alDeleteBuffers;
+import static org.lwjgl.openal.AL10.alGenBuffers;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_close;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_get_info;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_get_samples_short_interleaved;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_open_memory;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_stream_length_in_samples;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import static org.lwjgl.openal.AL10.*;
-import org.lwjgl.stb.STBVorbisInfo;
 import java.nio.ShortBuffer;
+
 import org.lwjgl.BufferUtils;
-import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import org.lwjgl.stb.STBVorbisInfo;
+
 import moe.thisis.aether.bokuseru.engine.Utils;
 
 public class SoundBuffer {

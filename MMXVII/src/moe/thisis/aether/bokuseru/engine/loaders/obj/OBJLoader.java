@@ -2,8 +2,10 @@ package moe.thisis.aether.bokuseru.engine.loaders.obj;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
 import moe.thisis.aether.bokuseru.engine.Utils;
 import moe.thisis.aether.bokuseru.engine.graph.InstancedMesh;
 import moe.thisis.aether.bokuseru.engine.graph.Mesh;

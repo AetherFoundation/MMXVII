@@ -1,6 +1,5 @@
 package moe.thisis.aether.bokuseru.engine.graph.lights;
 
-import moe.thisis.aether.bokuseru.engine.graph.lights.PointLight;
 import org.joml.Vector3f;
 
 public class SpotLight {

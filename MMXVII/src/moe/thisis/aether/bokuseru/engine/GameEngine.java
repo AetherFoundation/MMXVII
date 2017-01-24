@@ -1,7 +1,5 @@
 package moe.thisis.aether.bokuseru.engine;
 
-import moe.thisis.aether.bokuseru.engine.sound.SoundManager;
-
 public class GameEngine implements Runnable {
 
 	public static final int TARGET_FPS = 75;

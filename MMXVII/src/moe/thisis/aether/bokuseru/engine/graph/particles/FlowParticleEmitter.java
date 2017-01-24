@@ -3,7 +3,9 @@ package moe.thisis.aether.bokuseru.engine.graph.particles;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.joml.Vector3f;
+
 import moe.thisis.aether.bokuseru.engine.items.GameItem;
 
 public class FlowParticleEmitter implements IParticleEmitter {

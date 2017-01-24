@@ -1,26 +1,52 @@
 package moe.thisis.aether.bokuseru.engine.graph;
 
-import moe.thisis.aether.bokuseru.engine.graph.lights.SpotLight;
-import moe.thisis.aether.bokuseru.engine.graph.lights.PointLight;
-import moe.thisis.aether.bokuseru.engine.graph.lights.DirectionalLight;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_ONE;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDepthMask;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLineWidth;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+
 import java.util.List;
 import java.util.Map;
+
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL30.*;
-import moe.thisis.aether.bokuseru.engine.items.GameItem;
+
 import moe.thisis.aether.bokuseru.engine.Scene;
 import moe.thisis.aether.bokuseru.engine.SceneLight;
-import moe.thisis.aether.bokuseru.engine.items.SkyBox;
 import moe.thisis.aether.bokuseru.engine.Utils;
 import moe.thisis.aether.bokuseru.engine.Window;
 import moe.thisis.aether.bokuseru.engine.graph.anim.AnimGameItem;
 import moe.thisis.aether.bokuseru.engine.graph.anim.AnimatedFrame;
+import moe.thisis.aether.bokuseru.engine.graph.lights.DirectionalLight;
+import moe.thisis.aether.bokuseru.engine.graph.lights.PointLight;
+import moe.thisis.aether.bokuseru.engine.graph.lights.SpotLight;
 import moe.thisis.aether.bokuseru.engine.graph.particles.IParticleEmitter;
+import moe.thisis.aether.bokuseru.engine.items.GameItem;
+import moe.thisis.aether.bokuseru.engine.items.SkyBox;
 
 public class Renderer {
 

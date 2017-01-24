@@ -1,17 +1,42 @@
 package moe.thisis.aether.bokuseru.game;
 
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
+import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
+import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
+import static org.lwjgl.nanovg.NanoVG.nvgCircle;
+import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
+import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
+import static org.lwjgl.nanovg.NanoVG.nvgFill;
+import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
+import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
+import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
+import static org.lwjgl.nanovg.NanoVG.nvgRect;
+import static org.lwjgl.nanovg.NanoVG.nvgText;
+import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
+import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
+import static org.lwjgl.nanovg.NanoVGGL3.NVG_STENCIL_STROKES;
+import static org.lwjgl.nanovg.NanoVGGL3.nvgCreate;
+import static org.lwjgl.nanovg.NanoVGGL3.nvgDelete;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_STENCIL_TEST;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.lwjgl.BufferUtils;
-import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import org.lwjgl.nanovg.NVGColor;
-import static org.lwjgl.nanovg.NanoVG.*;
-import static org.lwjgl.nanovg.NanoVGGL3.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
+
 import moe.thisis.aether.bokuseru.engine.Utils;
 import moe.thisis.aether.bokuseru.engine.Window;
 

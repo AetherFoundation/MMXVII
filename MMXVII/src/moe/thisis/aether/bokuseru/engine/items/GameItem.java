@@ -2,6 +2,7 @@ package moe.thisis.aether.bokuseru.engine.items;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
 import moe.thisis.aether.bokuseru.engine.graph.Mesh;
 
 public class GameItem {

@@ -1,7 +1,12 @@
 package moe.thisis.aether.bokuseru.engine.sound;
 
+import static org.lwjgl.openal.AL10.AL_ORIENTATION;
+import static org.lwjgl.openal.AL10.AL_POSITION;
+import static org.lwjgl.openal.AL10.AL_VELOCITY;
+import static org.lwjgl.openal.AL10.alListener3f;
+import static org.lwjgl.openal.AL10.alListenerfv;
+
 import org.joml.Vector3f;
-import static org.lwjgl.openal.AL10.*;
 
 public class SoundListener {
 

@@ -1,5 +1,7 @@
 package moe.thisis.aether.bokuseru.engine;
 
+import static org.lwjgl.BufferUtils.createByteBuffer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +16,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 import org.lwjgl.BufferUtils;
-import static org.lwjgl.BufferUtils.*;
 
 public class Utils {
 

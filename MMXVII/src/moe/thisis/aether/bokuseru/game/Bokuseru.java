@@ -1,11 +1,21 @@
 package moe.thisis.aether.bokuseru.game;
 
-import de.matthiasmann.twl.utils.PNGDecoder;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
+
 import java.nio.ByteBuffer;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.openal.AL11;
+
+import de.matthiasmann.twl.utils.PNGDecoder;
 import moe.thisis.aether.bokuseru.engine.IGameLogic;
 import moe.thisis.aether.bokuseru.engine.MouseInput;
 import moe.thisis.aether.bokuseru.engine.Scene;

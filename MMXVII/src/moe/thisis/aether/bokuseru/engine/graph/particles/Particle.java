@@ -1,6 +1,7 @@
 package moe.thisis.aether.bokuseru.engine.graph.particles;
 
 import org.joml.Vector3f;
+
 import moe.thisis.aether.bokuseru.engine.graph.Mesh;
 import moe.thisis.aether.bokuseru.engine.graph.Texture;
 import moe.thisis.aether.bokuseru.engine.items.GameItem;

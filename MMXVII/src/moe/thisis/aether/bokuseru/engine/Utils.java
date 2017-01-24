@@ -1,7 +1,5 @@
 package moe.thisis.aether.bokuseru.engine;
 
-import static org.lwjgl.BufferUtils.createByteBuffer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,38 +19,39 @@ import org.lwjgl.BufferUtils;
 
 public class Utils {
 
-	public static boolean existsResourceFile(String fileName) {
+	public static boolean existsResourceFile(final String fileName) {
 		boolean result;
 		try (InputStream is = Utils.class.getResourceAsStream(fileName)) {
 			result = is != null;
-		} catch (Exception excp) {
+		} catch (final Exception excp) {
 			result = false;
 		}
 		return result;
 	}
 
-	public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+	public static ByteBuffer ioResourceToByteBuffer(final String resource, final int bufferSize) throws IOException {
 		ByteBuffer buffer;
 
-		Path path = Paths.get(resource);
+		final Path path = Paths.get(resource);
 		if (Files.isReadable(path)) {
 			try (SeekableByteChannel fc = Files.newByteChannel(path)) {
 				buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
-				while (fc.read(buffer) != -1)
+				while (fc.read(buffer) != -1) {
 					;
+				}
 			}
 		} else {
 			try (InputStream source = Utils.class.getResourceAsStream(resource);
 					ReadableByteChannel rbc = Channels.newChannel(source)) {
-				buffer = createByteBuffer(bufferSize);
+				buffer = BufferUtils.createByteBuffer(bufferSize);
 
 				while (true) {
-					int bytes = rbc.read(buffer);
+					final int bytes = rbc.read(buffer);
 					if (bytes == -1) {
 						break;
 					}
 					if (buffer.remaining() == 0) {
-						buffer = resizeBuffer(buffer, buffer.capacity() * 2);
+						buffer = Utils.resizeBuffer(buffer, buffer.capacity() * 2);
 					}
 				}
 			}
@@ -62,21 +61,21 @@ public class Utils {
 		return buffer;
 	}
 
-	public static int[] listIntToArray(List<Integer> list) {
-		int[] result = list.stream().mapToInt((Integer v) -> v).toArray();
+	public static int[] listIntToArray(final List<Integer> list) {
+		final int[] result = list.stream().mapToInt((final Integer v) -> v).toArray();
 		return result;
 	}
 
-	public static float[] listToArray(List<Float> list) {
-		int size = list != null ? list.size() : 0;
-		float[] floatArr = new float[size];
+	public static float[] listToArray(final List<Float> list) {
+		final int size = list != null ? list.size() : 0;
+		final float[] floatArr = new float[size];
 		for (int i = 0; i < size; i++) {
 			floatArr[i] = list.get(i);
 		}
 		return floatArr;
 	}
 
-	public static String loadResource(String fileName) throws Exception {
+	public static String loadResource(final String fileName) throws Exception {
 		String result;
 		try (InputStream in = Utils.class.getClass().getResourceAsStream(fileName);
 				Scanner scanner = new Scanner(in, "UTF-8")) {
@@ -85,8 +84,8 @@ public class Utils {
 		return result;
 	}
 
-	public static List<String> readAllLines(String fileName) throws Exception {
-		List<String> list = new ArrayList<>();
+	public static List<String> readAllLines(final String fileName) throws Exception {
+		final List<String> list = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(
 				new InputStreamReader(Utils.class.getClass().getResourceAsStream(fileName)))) {
 			String line;
@@ -97,8 +96,8 @@ public class Utils {
 		return list;
 	}
 
-	private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
-		ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
+	private static ByteBuffer resizeBuffer(final ByteBuffer buffer, final int newCapacity) {
+		final ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
 		buffer.flip();
 		newBuffer.put(buffer);
 		return newBuffer;

@@ -1,33 +1,5 @@
 package moe.thisis.aether.bokuseru.game;
 
-import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
-import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
-import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
-import static org.lwjgl.nanovg.NanoVG.nvgCircle;
-import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
-import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
-import static org.lwjgl.nanovg.NanoVG.nvgFill;
-import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
-import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
-import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
-import static org.lwjgl.nanovg.NanoVG.nvgRect;
-import static org.lwjgl.nanovg.NanoVG.nvgText;
-import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
-import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
-import static org.lwjgl.nanovg.NanoVGGL3.NVG_STENCIL_STROKES;
-import static org.lwjgl.nanovg.NanoVGGL3.nvgCreate;
-import static org.lwjgl.nanovg.NanoVGGL3.nvgDelete;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_TEST;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.text.DateFormat;
@@ -35,7 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL3;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
 
 import moe.thisis.aether.bokuseru.engine.Utils;
 import moe.thisis.aether.bokuseru.engine.Window;
@@ -59,7 +36,7 @@ public class Hud {
 	private int counter;
 
 	public void cleanup() {
-		nvgDelete(vg);
+		NanoVGGL3.nvgDelete(vg);
 	}
 
 	public void incCounter() {
@@ -69,15 +46,16 @@ public class Hud {
 		}
 	}
 
-	public void init(Window window) throws Exception {
-		this.vg = window.getOptions().antialiasing ? nvgCreate(NVG_ANTIALIAS | NVG_STENCIL_STROKES)
-				: nvgCreate(NVG_STENCIL_STROKES);
-		if (this.vg == NULL) {
+	public void init(final Window window) throws Exception {
+		vg = window.getOptions().antialiasing
+				? NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS | NanoVGGL3.NVG_STENCIL_STROKES)
+				: NanoVGGL3.nvgCreate(NanoVGGL3.NVG_STENCIL_STROKES);
+		if (vg == MemoryUtil.NULL) {
 			throw new Exception("Could not init nanovg");
 		}
 
 		fontBuffer = Utils.ioResourceToByteBuffer("/fonts/OpenSans-Bold.ttf", 150 * 1024);
-		int font = nvgCreateFontMem(vg, FONT_NAME, fontBuffer, 0);
+		final int font = NanoVG.nvgCreateFontMem(vg, Hud.FONT_NAME, fontBuffer, 0);
 		if (font == -1) {
 			throw new Exception("Could not add font");
 		}
@@ -89,63 +67,63 @@ public class Hud {
 		counter = 0;
 	}
 
-	public void render(Window window) {
-		nvgBeginFrame(vg, window.getWidth(), window.getHeight(), 1);
+	public void render(final Window window) {
+		NanoVG.nvgBeginFrame(vg, window.getWidth(), window.getHeight(), 1);
 
 		// Upper ribbon
-		nvgBeginPath(vg);
-		nvgRect(vg, 0, window.getHeight() - 100, window.getWidth(), 50);
-		nvgFillColor(vg, rgba(0x23, 0xa1, 0xf1, 200, colour));
-		nvgFill(vg);
+		NanoVG.nvgBeginPath(vg);
+		NanoVG.nvgRect(vg, 0, window.getHeight() - 100, window.getWidth(), 50);
+		NanoVG.nvgFillColor(vg, rgba(0x23, 0xa1, 0xf1, 200, colour));
+		NanoVG.nvgFill(vg);
 
 		// Lower ribbon
-		nvgBeginPath(vg);
-		nvgRect(vg, 0, window.getHeight() - 50, window.getWidth(), 10);
-		nvgFillColor(vg, rgba(0xc1, 0xe3, 0xf9, 200, colour));
-		nvgFill(vg);
+		NanoVG.nvgBeginPath(vg);
+		NanoVG.nvgRect(vg, 0, window.getHeight() - 50, window.getWidth(), 10);
+		NanoVG.nvgFillColor(vg, rgba(0xc1, 0xe3, 0xf9, 200, colour));
+		NanoVG.nvgFill(vg);
 
-		glfwGetCursorPos(window.getWindowHandle(), posx, posy);
-		int xcenter = 50;
-		int ycenter = window.getHeight() - 75;
-		int radius = 20;
-		int x = (int) posx.get(0);
-		int y = (int) posy.get(0);
-		boolean hover = Math.pow(x - xcenter, 2) + Math.pow(y - ycenter, 2) < Math.pow(radius, 2);
+		GLFW.glfwGetCursorPos(window.getWindowHandle(), posx, posy);
+		final int xcenter = 50;
+		final int ycenter = window.getHeight() - 75;
+		final int radius = 20;
+		final int x = (int) posx.get(0);
+		final int y = (int) posy.get(0);
+		final boolean hover = (Math.pow(x - xcenter, 2) + Math.pow(y - ycenter, 2)) < Math.pow(radius, 2);
 
 		// Circle
-		nvgBeginPath(vg);
-		nvgCircle(vg, xcenter, ycenter, radius);
-		nvgFillColor(vg, rgba(0xc1, 0xe3, 0xf9, 200, colour));
-		nvgFill(vg);
+		NanoVG.nvgBeginPath(vg);
+		NanoVG.nvgCircle(vg, xcenter, ycenter, radius);
+		NanoVG.nvgFillColor(vg, rgba(0xc1, 0xe3, 0xf9, 200, colour));
+		NanoVG.nvgFill(vg);
 
 		// Clicks Text
-		nvgFontSize(vg, 25.0f);
-		nvgFontFace(vg, FONT_NAME);
-		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
+		NanoVG.nvgFontSize(vg, 25.0f);
+		NanoVG.nvgFontFace(vg, Hud.FONT_NAME);
+		NanoVG.nvgTextAlign(vg, NanoVG.NVG_ALIGN_CENTER | NanoVG.NVG_ALIGN_TOP);
 		if (hover) {
-			nvgFillColor(vg, rgba(0x00, 0x00, 0x00, 255, colour));
+			NanoVG.nvgFillColor(vg, rgba(0x00, 0x00, 0x00, 255, colour));
 		} else {
-			nvgFillColor(vg, rgba(0x23, 0xa1, 0xf1, 255, colour));
+			NanoVG.nvgFillColor(vg, rgba(0x23, 0xa1, 0xf1, 255, colour));
 
 		}
-		nvgText(vg, 50, window.getHeight() - 87, String.format("%02d", counter));
+		NanoVG.nvgText(vg, 50, window.getHeight() - 87, String.format("%02d", counter));
 
 		// Render hour text
-		nvgFontSize(vg, 40.0f);
-		nvgFontFace(vg, FONT_NAME);
-		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-		nvgFillColor(vg, rgba(0xe6, 0xea, 0xed, 255, colour));
-		nvgText(vg, window.getWidth() - 150, window.getHeight() - 95, dateFormat.format(new Date()));
+		NanoVG.nvgFontSize(vg, 40.0f);
+		NanoVG.nvgFontFace(vg, Hud.FONT_NAME);
+		NanoVG.nvgTextAlign(vg, NanoVG.NVG_ALIGN_LEFT | NanoVG.NVG_ALIGN_TOP);
+		NanoVG.nvgFillColor(vg, rgba(0xe6, 0xea, 0xed, 255, colour));
+		NanoVG.nvgText(vg, window.getWidth() - 150, window.getHeight() - 95, dateFormat.format(new Date()));
 
-		nvgEndFrame(vg);
+		NanoVG.nvgEndFrame(vg);
 
 		// Restore state
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_STENCIL_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_STENCIL_TEST);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	private NVGColor rgba(int r, int g, int b, int a, NVGColor colour) {
+	private NVGColor rgba(final int r, final int g, final int b, final int a, final NVGColor colour) {
 		colour.r(r / 255.0f);
 		colour.g(g / 255.0f);
 		colour.b(b / 255.0f);

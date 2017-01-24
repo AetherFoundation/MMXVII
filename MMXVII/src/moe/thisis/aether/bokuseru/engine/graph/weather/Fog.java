@@ -14,11 +14,11 @@ public class Fog {
 
 	public Fog() {
 		active = false;
-		this.colour = new Vector3f(0, 0, 0);
-		this.density = 0;
+		colour = new Vector3f(0, 0, 0);
+		density = 0;
 	}
 
-	public Fog(boolean active, Vector3f colour, float density) {
+	public Fog(final boolean active, final Vector3f colour, final float density) {
 		this.colour = colour;
 		this.density = density;
 		this.active = active;
@@ -49,7 +49,7 @@ public class Fog {
 	 * @param active
 	 *            state to set
 	 */
-	public void setActive(boolean active) {
+	public void setActive(final boolean active) {
 		this.active = active;
 	}
 
@@ -57,7 +57,7 @@ public class Fog {
 	 * @param colour
 	 *            the colour to set
 	 */
-	public void setColour(Vector3f colour) {
+	public void setColour(final Vector3f colour) {
 		this.colour = colour;
 	}
 
@@ -65,7 +65,7 @@ public class Fog {
 	 * @param density
 	 *            the density to set
 	 */
-	public void setDensity(float density) {
+	public void setDensity(final float density) {
 		this.density = density;
 	}
 }

@@ -12,7 +12,7 @@ public class PointLight {
 
 		private float exponent;
 
-		public Attenuation(float constant, float linear, float exponent) {
+		public Attenuation(final float constant, final float linear, final float exponent) {
 			this.constant = constant;
 			this.linear = linear;
 			this.exponent = exponent;
@@ -30,15 +30,15 @@ public class PointLight {
 			return linear;
 		}
 
-		public void setConstant(float constant) {
+		public void setConstant(final float constant) {
 			this.constant = constant;
 		}
 
-		public void setExponent(float exponent) {
+		public void setExponent(final float exponent) {
 			this.exponent = exponent;
 		}
 
-		public void setLinear(float linear) {
+		public void setLinear(final float linear) {
 			this.linear = linear;
 		}
 	}
@@ -51,19 +51,20 @@ public class PointLight {
 
 	private Attenuation attenuation;
 
-	public PointLight(PointLight pointLight) {
+	public PointLight(final PointLight pointLight) {
 		this(new Vector3f(pointLight.getColor()), new Vector3f(pointLight.getPosition()), pointLight.getIntensity(),
 				pointLight.getAttenuation());
 	}
 
-	public PointLight(Vector3f color, Vector3f position, float intensity) {
+	public PointLight(final Vector3f color, final Vector3f position, final float intensity) {
 		attenuation = new Attenuation(1, 0, 0);
 		this.color = color;
 		this.position = position;
 		this.intensity = intensity;
 	}
 
-	public PointLight(Vector3f color, Vector3f position, float intensity, Attenuation attenuation) {
+	public PointLight(final Vector3f color, final Vector3f position, final float intensity,
+			final Attenuation attenuation) {
 		this(color, position, intensity);
 		this.attenuation = attenuation;
 	}
@@ -84,19 +85,19 @@ public class PointLight {
 		return position;
 	}
 
-	public void setAttenuation(Attenuation attenuation) {
+	public void setAttenuation(final Attenuation attenuation) {
 		this.attenuation = attenuation;
 	}
 
-	public void setColor(Vector3f color) {
+	public void setColor(final Vector3f color) {
 		this.color = color;
 	}
 
-	public void setIntensity(float intensity) {
+	public void setIntensity(final float intensity) {
 		this.intensity = intensity;
 	}
 
-	public void setPosition(Vector3f position) {
+	public void setPosition(final Vector3f position) {
 		this.position = position;
 	}
 }

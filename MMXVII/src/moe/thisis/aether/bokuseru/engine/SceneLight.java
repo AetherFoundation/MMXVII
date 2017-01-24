@@ -38,23 +38,23 @@ public class SceneLight {
 		return spotLightList;
 	}
 
-	public void setAmbientLight(Vector3f ambientLight) {
+	public void setAmbientLight(final Vector3f ambientLight) {
 		this.ambientLight = ambientLight;
 	}
 
-	public void setDirectionalLight(DirectionalLight directionalLight) {
+	public void setDirectionalLight(final DirectionalLight directionalLight) {
 		this.directionalLight = directionalLight;
 	}
 
-	public void setPointLightList(PointLight[] pointLightList) {
+	public void setPointLightList(final PointLight[] pointLightList) {
 		this.pointLightList = pointLightList;
 	}
 
-	public void setSkyBoxLight(Vector3f skyBoxLight) {
+	public void setSkyBoxLight(final Vector3f skyBoxLight) {
 		this.skyBoxLight = skyBoxLight;
 	}
 
-	public void setSpotLightList(SpotLight[] spotLightList) {
+	public void setSpotLightList(final SpotLight[] spotLightList) {
 		this.spotLightList = spotLightList;
 	}
 

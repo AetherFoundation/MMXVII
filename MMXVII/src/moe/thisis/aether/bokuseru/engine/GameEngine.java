@@ -20,11 +20,11 @@ public class GameEngine implements Runnable {
 
 	private int fps;
 
-	private String windowTitle;
+	private final String windowTitle;
 
 	/**
 	 * Create an engine instance without specifying window size
-	 * 
+	 *
 	 * @param windowTitle
 	 *            Title of the game window
 	 * @param vSync
@@ -35,14 +35,14 @@ public class GameEngine implements Runnable {
 	 *            Game logic to use
 	 * @throws Exception
 	 */
-	public GameEngine(String windowTitle, boolean vSync, Window.WindowOptions opts, IGameLogic gameLogic)
-			throws Exception {
+	public GameEngine(final String windowTitle, final boolean vSync, final Window.WindowOptions opts,
+			final IGameLogic gameLogic) throws Exception {
 		this(windowTitle, 0, 0, vSync, opts, gameLogic);
 	}
 
 	/**
 	 * Create an engine instance with a specific window size
-	 * 
+	 *
 	 * @param windowTitle
 	 *            Title of the game window
 	 * @param width
@@ -57,8 +57,8 @@ public class GameEngine implements Runnable {
 	 *            Game logic to use
 	 * @throws Exception
 	 */
-	public GameEngine(String windowTitle, int width, int height, boolean vSync, Window.WindowOptions opts,
-			IGameLogic gameLogic) throws Exception {
+	public GameEngine(final String windowTitle, final int width, final int height, final boolean vSync,
+			final Window.WindowOptions opts, final IGameLogic gameLogic) throws Exception {
 		this.windowTitle = windowTitle;
 		gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
 		window = new Window(windowTitle, width, height, vSync, opts);
@@ -69,7 +69,7 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Clear the state of the game logic
-	 * 
+	 *
 	 */
 	protected void cleanup() {
 		gameLogic.cleanup();
@@ -77,14 +77,14 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Game engine execution loop
-	 * 
+	 *
 	 */
 	protected void gameLoop() {
 		float elapsedTime;
 		float accumulator = 0f;
-		float interval = 1f / TARGET_UPS;
+		final float interval = 1f / GameEngine.TARGET_UPS;
 
-		boolean running = true;
+		final boolean running = true;
 		while (running && !window.windowShouldClose()) {
 			elapsedTime = timer.getElapsedTime();
 			accumulator += elapsedTime;
@@ -106,7 +106,7 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Initialize the game engine
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	protected void init() throws Exception {
@@ -120,7 +120,7 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Handle user input
-	 * 
+	 *
 	 */
 	protected void input() {
 		mouseInput.input(window);
@@ -129,10 +129,10 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Render the game to the window
-	 * 
+	 *
 	 */
 	protected void render() {
-		if (window.getWindowOptions().showFps && timer.getLastLoopTime() - lastFps > 1) {
+		if (window.getWindowOptions().showFps && ((timer.getLastLoopTime() - lastFps) > 1)) {
 			lastFps = timer.getLastLoopTime();
 			window.setWindowTitle(windowTitle + " - " + fps + " FPS");
 			fps = 0;
@@ -144,7 +144,7 @@ public class GameEngine implements Runnable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -152,7 +152,7 @@ public class GameEngine implements Runnable {
 		try {
 			init();
 			gameLoop();
-		} catch (Exception excp) {
+		} catch (final Exception excp) {
 			excp.printStackTrace();
 		} finally {
 			cleanup();
@@ -163,7 +163,7 @@ public class GameEngine implements Runnable {
 	 * Start the game engine Handles thread launching differently for macOS
 	 */
 	public void start() {
-		String osName = System.getProperty("os.name");
+		final String osName = System.getProperty("os.name");
 		if (osName.contains("Mac")) {
 			gameLoopThread.run();
 		} else {
@@ -173,26 +173,26 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Synchronize execution to the target framerate
-	 * 
+	 *
 	 */
 	private void sync() {
-		float loopSlot = 1f / TARGET_FPS;
-		double endTime = timer.getLastLoopTime() + loopSlot;
+		final float loopSlot = 1f / GameEngine.TARGET_FPS;
+		final double endTime = timer.getLastLoopTime() + loopSlot;
 		while (timer.getTime() < endTime) {
 			try {
 				Thread.sleep(1);
-			} catch (InterruptedException ie) {
+			} catch (final InterruptedException ie) {
 			}
 		}
 	}
 
 	/**
 	 * Update the game logic
-	 * 
+	 *
 	 * @param interval
 	 *            Update interval
 	 */
-	protected void update(float interval) {
+	protected void update(final float interval) {
 		gameLogic.update(interval, mouseInput, window);
 	}
 

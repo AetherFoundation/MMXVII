@@ -1,30 +1,5 @@
 package moe.thisis.aether.bokuseru.engine.graph;
 
-import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
-import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL20.glAttachShader;
-import static org.lwjgl.opengl.GL20.glCompileShader;
-import static org.lwjgl.opengl.GL20.glCreateProgram;
-import static org.lwjgl.opengl.GL20.glCreateShader;
-import static org.lwjgl.opengl.GL20.glDeleteProgram;
-import static org.lwjgl.opengl.GL20.glDetachShader;
-import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL20.glGetProgrami;
-import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
-import static org.lwjgl.opengl.GL20.glGetShaderi;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glLinkProgram;
-import static org.lwjgl.opengl.GL20.glShaderSource;
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform1i;
-import static org.lwjgl.opengl.GL20.glUniform3f;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL20.glValidateProgram;
-
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +7,7 @@ import java.util.Map;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import moe.thisis.aether.bokuseru.engine.graph.lights.DirectionalLight;
 import moe.thisis.aether.bokuseru.engine.graph.lights.PointLight;
@@ -51,7 +27,7 @@ public class ShaderProgram {
 	private final Map<String, UniformData> uniforms;
 
 	public ShaderProgram() throws Exception {
-		programId = glCreateProgram();
+		programId = GL20.glCreateProgram();
 		if (programId == 0) {
 			throw new Exception("Could not create Shader");
 		}
@@ -59,46 +35,46 @@ public class ShaderProgram {
 	}
 
 	public void bind() {
-		glUseProgram(programId);
+		GL20.glUseProgram(programId);
 	}
 
 	public void cleanup() {
 		unbind();
 		if (programId != 0) {
-			glDeleteProgram(programId);
+			GL20.glDeleteProgram(programId);
 		}
 	}
 
-	public void createDirectionalLightUniform(String uniformName) throws Exception {
+	public void createDirectionalLightUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".direction");
 		createUniform(uniformName + ".intensity");
 	}
 
-	public void createFogUniform(String uniformName) throws Exception {
+	public void createFogUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".activeFog");
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".density");
 	}
 
-	public void createFragmentShader(String shaderCode) throws Exception {
-		fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);
+	public void createFragmentShader(final String shaderCode) throws Exception {
+		fragmentShaderId = createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
 	}
 
-	public void createMaterialUniform(String uniformName) throws Exception {
+	public void createMaterialUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".hasTexture");
 		createUniform(uniformName + ".hasNormalMap");
 		createUniform(uniformName + ".reflectance");
 	}
 
-	public void createPointLightListUniform(String uniformName, int size) throws Exception {
+	public void createPointLightListUniform(final String uniformName, final int size) throws Exception {
 		for (int i = 0; i < size; i++) {
 			createPointLightUniform(uniformName + "[" + i + "]");
 		}
 	}
 
-	public void createPointLightUniform(String uniformName) throws Exception {
+	public void createPointLightUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".position");
 		createUniform(uniformName + ".intensity");
@@ -107,108 +83,108 @@ public class ShaderProgram {
 		createUniform(uniformName + ".att.exponent");
 	}
 
-	protected int createShader(String shaderCode, int shaderType) throws Exception {
-		int shaderId = glCreateShader(shaderType);
+	protected int createShader(final String shaderCode, final int shaderType) throws Exception {
+		final int shaderId = GL20.glCreateShader(shaderType);
 		if (shaderId == 0) {
 			throw new Exception("Error creating shader. Code: " + shaderId);
 		}
 
-		glShaderSource(shaderId, shaderCode);
-		glCompileShader(shaderId);
+		GL20.glShaderSource(shaderId, shaderCode);
+		GL20.glCompileShader(shaderId);
 
-		if (glGetShaderi(shaderId, GL_COMPILE_STATUS) == 0) {
-			throw new Exception("Error compiling Shader code: " + glGetShaderInfoLog(shaderId, 1024));
+		if (GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS) == 0) {
+			throw new Exception("Error compiling Shader code: " + GL20.glGetShaderInfoLog(shaderId, 1024));
 		}
 
-		glAttachShader(programId, shaderId);
+		GL20.glAttachShader(programId, shaderId);
 
 		return shaderId;
 	}
 
-	public void createSpotLightListUniform(String uniformName, int size) throws Exception {
+	public void createSpotLightListUniform(final String uniformName, final int size) throws Exception {
 		for (int i = 0; i < size; i++) {
 			createSpotLightUniform(uniformName + "[" + i + "]");
 		}
 	}
 
-	public void createSpotLightUniform(String uniformName) throws Exception {
+	public void createSpotLightUniform(final String uniformName) throws Exception {
 		createPointLightUniform(uniformName + ".pl");
 		createUniform(uniformName + ".conedir");
 		createUniform(uniformName + ".cutoff");
 	}
 
-	public void createUniform(String uniformName) throws Exception {
-		int uniformLocation = glGetUniformLocation(programId, uniformName);
+	public void createUniform(final String uniformName) throws Exception {
+		final int uniformLocation = GL20.glGetUniformLocation(programId, uniformName);
 		if (uniformLocation < 0) {
 			throw new Exception("Could not find uniform:" + uniformName);
 		}
 		uniforms.put(uniformName, new UniformData(uniformLocation));
 	}
 
-	public void createVertexShader(String shaderCode) throws Exception {
-		vertexShaderId = createShader(shaderCode, GL_VERTEX_SHADER);
+	public void createVertexShader(final String shaderCode) throws Exception {
+		vertexShaderId = createShader(shaderCode, GL20.GL_VERTEX_SHADER);
 	}
 
 	public void link() throws Exception {
-		glLinkProgram(programId);
-		if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
-			throw new Exception("Error linking Shader code: " + glGetProgramInfoLog(programId, 1024));
+		GL20.glLinkProgram(programId);
+		if (GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == 0) {
+			throw new Exception("Error linking Shader code: " + GL20.glGetProgramInfoLog(programId, 1024));
 		}
 
 		if (vertexShaderId != 0) {
-			glDetachShader(programId, vertexShaderId);
+			GL20.glDetachShader(programId, vertexShaderId);
 		}
 		if (geometryShaderId != 0) {
-			glDetachShader(programId, geometryShaderId);
+			GL20.glDetachShader(programId, geometryShaderId);
 		}
 		if (fragmentShaderId != 0) {
-			glDetachShader(programId, fragmentShaderId);
+			GL20.glDetachShader(programId, fragmentShaderId);
 		}
 
-		glValidateProgram(programId);
-		if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
-			System.err.println("Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
+		GL20.glValidateProgram(programId);
+		if (GL20.glGetProgrami(programId, GL20.GL_VALIDATE_STATUS) == 0) {
+			System.err.println("Warning validating Shader code: " + GL20.glGetProgramInfoLog(programId, 1024));
 		}
 
 	}
 
-	public void setUniform(String uniformName, DirectionalLight dirLight) {
+	public void setUniform(final String uniformName, final DirectionalLight dirLight) {
 		setUniform(uniformName + ".colour", dirLight.getColor());
 		setUniform(uniformName + ".direction", dirLight.getDirection());
 		setUniform(uniformName + ".intensity", dirLight.getIntensity());
 	}
 
-	public void setUniform(String uniformName, float value) {
-		UniformData uniformData = uniforms.get(uniformName);
+	public void setUniform(final String uniformName, final float value) {
+		final UniformData uniformData = uniforms.get(uniformName);
 		if (uniformData == null) {
 			throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");
 		}
-		glUniform1f(uniformData.getUniformLocation(), value);
+		GL20.glUniform1f(uniformData.getUniformLocation(), value);
 	}
 
-	public void setUniform(String uniformName, Fog fog) {
+	public void setUniform(final String uniformName, final Fog fog) {
 		setUniform(uniformName + ".activeFog", fog.isActive() ? 1 : 0);
 		setUniform(uniformName + ".colour", fog.getColour());
 		setUniform(uniformName + ".density", fog.getDensity());
 	}
 
-	public void setUniform(String uniformName, int value) {
-		UniformData uniformData = uniforms.get(uniformName);
+	public void setUniform(final String uniformName, final int value) {
+		final UniformData uniformData = uniforms.get(uniformName);
 		if (uniformData == null) {
 			throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");
 		}
-		glUniform1i(uniformData.getUniformLocation(), value);
+		GL20.glUniform1i(uniformData.getUniformLocation(), value);
 	}
 
-	public void setUniform(String uniformName, Material material) {
+	public void setUniform(final String uniformName, final Material material) {
 		setUniform(uniformName + ".colour", material.getColour());
 		setUniform(uniformName + ".hasTexture", material.isTextured() ? 1 : 0);
 		setUniform(uniformName + ".hasNormalMap", material.hasNormalMap() ? 1 : 0);
 		setUniform(uniformName + ".reflectance", material.getReflectance());
 	}
 
-	public void setUniform(String uniformName, Matrix4f value) {
-		UniformData uniformData = uniforms.get(uniformName);
+	public void setUniform(final String uniformName, final Matrix4f value) {
+		final UniformData uniformData = uniforms.get(uniformName);
 		if (uniformData == null) {
 			throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");
 		}
@@ -220,12 +196,12 @@ public class ShaderProgram {
 		}
 		// Dump the matrix into a float buffer
 		fb = value.get(fb);
-		glUniformMatrix4fv(uniformData.getUniformLocation(), false, fb);
+		GL20.glUniformMatrix4fv(uniformData.getUniformLocation(), false, fb);
 	}
 
-	public void setUniform(String uniformName, Matrix4f[] matrices) {
-		int length = matrices != null ? matrices.length : 0;
-		UniformData uniformData = uniforms.get(uniformName);
+	public void setUniform(final String uniformName, final Matrix4f[] matrices) {
+		final int length = matrices != null ? matrices.length : 0;
+		final UniformData uniformData = uniforms.get(uniformName);
 		if (uniformData == null) {
 			throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");
 		}
@@ -238,56 +214,56 @@ public class ShaderProgram {
 		for (int i = 0; i < length; i++) {
 			matrices[i].get(16 * i, fb);
 		}
-		glUniformMatrix4fv(uniformData.getUniformLocation(), false, fb);
+		GL20.glUniformMatrix4fv(uniformData.getUniformLocation(), false, fb);
 	}
 
-	public void setUniform(String uniformName, PointLight pointLight) {
+	public void setUniform(final String uniformName, final PointLight pointLight) {
 		setUniform(uniformName + ".colour", pointLight.getColor());
 		setUniform(uniformName + ".position", pointLight.getPosition());
 		setUniform(uniformName + ".intensity", pointLight.getIntensity());
-		PointLight.Attenuation att = pointLight.getAttenuation();
+		final PointLight.Attenuation att = pointLight.getAttenuation();
 		setUniform(uniformName + ".att.constant", att.getConstant());
 		setUniform(uniformName + ".att.linear", att.getLinear());
 		setUniform(uniformName + ".att.exponent", att.getExponent());
 	}
 
-	public void setUniform(String uniformName, PointLight pointLight, int pos) {
+	public void setUniform(final String uniformName, final PointLight pointLight, final int pos) {
 		setUniform(uniformName + "[" + pos + "]", pointLight);
 	}
 
-	public void setUniform(String uniformName, PointLight[] pointLights) {
-		int numLights = pointLights != null ? pointLights.length : 0;
+	public void setUniform(final String uniformName, final PointLight[] pointLights) {
+		final int numLights = pointLights != null ? pointLights.length : 0;
 		for (int i = 0; i < numLights; i++) {
 			setUniform(uniformName, pointLights[i], i);
 		}
 	}
 
-	public void setUniform(String uniformName, SpotLight spotLight) {
+	public void setUniform(final String uniformName, final SpotLight spotLight) {
 		setUniform(uniformName + ".pl", spotLight.getPointLight());
 		setUniform(uniformName + ".conedir", spotLight.getConeDirection());
 		setUniform(uniformName + ".cutoff", spotLight.getCutOff());
 	}
 
-	public void setUniform(String uniformName, SpotLight spotLight, int pos) {
+	public void setUniform(final String uniformName, final SpotLight spotLight, final int pos) {
 		setUniform(uniformName + "[" + pos + "]", spotLight);
 	}
 
-	public void setUniform(String uniformName, SpotLight[] spotLights) {
-		int numLights = spotLights != null ? spotLights.length : 0;
+	public void setUniform(final String uniformName, final SpotLight[] spotLights) {
+		final int numLights = spotLights != null ? spotLights.length : 0;
 		for (int i = 0; i < numLights; i++) {
 			setUniform(uniformName, spotLights[i], i);
 		}
 	}
 
-	public void setUniform(String uniformName, Vector3f value) {
-		UniformData uniformData = uniforms.get(uniformName);
+	public void setUniform(final String uniformName, final Vector3f value) {
+		final UniformData uniformData = uniforms.get(uniformName);
 		if (uniformData == null) {
 			throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");
 		}
-		glUniform3f(uniformData.getUniformLocation(), value.x, value.y, value.z);
+		GL20.glUniform3f(uniformData.getUniformLocation(), value.x, value.y, value.z);
 	}
 
 	public void unbind() {
-		glUseProgram(0);
+		GL20.glUseProgram(0);
 	}
 }

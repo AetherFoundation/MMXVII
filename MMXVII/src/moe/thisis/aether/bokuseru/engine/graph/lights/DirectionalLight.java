@@ -25,17 +25,17 @@ public class DirectionalLight {
 
 	private float intensity;
 
-	private OrthoCoords orthoCords;
+	private final OrthoCoords orthoCords;
 
 	private float shadowPosMult;
 
-	public DirectionalLight(DirectionalLight light) {
+	public DirectionalLight(final DirectionalLight light) {
 		this(new Vector3f(light.getColor()), new Vector3f(light.getDirection()), light.getIntensity());
 	}
 
-	public DirectionalLight(Vector3f color, Vector3f direction, float intensity) {
-		this.orthoCords = new OrthoCoords();
-		this.shadowPosMult = 1;
+	public DirectionalLight(final Vector3f color, final Vector3f direction, final float intensity) {
+		orthoCords = new OrthoCoords();
+		shadowPosMult = 1;
 		this.color = color;
 		this.direction = direction;
 		this.intensity = intensity;
@@ -62,19 +62,20 @@ public class DirectionalLight {
 		return shadowPosMult;
 	}
 
-	public void setColor(Vector3f color) {
+	public void setColor(final Vector3f color) {
 		this.color = color;
 	}
 
-	public void setDirection(Vector3f direction) {
+	public void setDirection(final Vector3f direction) {
 		this.direction = direction;
 	}
 
-	public void setIntensity(float intensity) {
+	public void setIntensity(final float intensity) {
 		this.intensity = intensity;
 	}
 
-	public void setOrthoCords(float left, float right, float bottom, float top, float near, float far) {
+	public void setOrthoCords(final float left, final float right, final float bottom, final float top,
+			final float near, final float far) {
 		orthoCords.left = left;
 		orthoCords.right = right;
 		orthoCords.bottom = bottom;
@@ -83,7 +84,7 @@ public class DirectionalLight {
 		orthoCords.far = far;
 	}
 
-	public void setShadowPosMult(float shadowPosMult) {
+	public void setShadowPosMult(final float shadowPosMult) {
 		this.shadowPosMult = shadowPosMult;
 	}
 }

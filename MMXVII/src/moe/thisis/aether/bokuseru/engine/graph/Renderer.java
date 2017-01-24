@@ -1,32 +1,5 @@
 package moe.thisis.aether.bokuseru.engine.graph;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_ONE;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +7,9 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL30;
 
 import moe.thisis.aether.bokuseru.engine.Scene;
 import moe.thisis.aether.bokuseru.engine.SceneLight;
@@ -92,7 +68,7 @@ public class Renderer {
 	}
 
 	public void clear() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 	}
 
 	/*
@@ -102,15 +78,15 @@ public class Renderer {
 	 * "/shaders/particles_vertex.vs"));
 	 * particlesShaderProgram.createFragmentShader(Utils.loadResource(
 	 * "/shaders/particles_fragment.fs")); particlesShaderProgram.link();
-	 * 
+	 *
 	 * particlesShaderProgram.createUniform("projectionMatrix");
 	 * particlesShaderProgram.createUniform("texture_sampler");
-	 * 
+	 *
 	 * particlesShaderProgram.createUniform("numCols");
 	 * particlesShaderProgram.createUniform("numRows"); }
 	 */
 
-	public void init(Window window) throws Exception {
+	public void init(final Window window) throws Exception {
 		shadowMap = new ShadowMap();
 
 		setupDepthShader();
@@ -126,7 +102,7 @@ public class Renderer {
 	 * "/shaders/sb_vertex.vs"));
 	 * skyBoxShaderProgram.createFragmentShader(Utils.loadResource(
 	 * "/shaders/sb_fragment.fs")); skyBoxShaderProgram.link();
-	 * 
+	 *
 	 * // Create uniforms for projection matrix
 	 * skyBoxShaderProgram.createUniform("projectionMatrix");
 	 * skyBoxShaderProgram.createUniform("modelViewMatrix");
@@ -136,13 +112,13 @@ public class Renderer {
 	 * skyBoxShaderProgram.createUniform("hasTexture"); }
 	 */
 
-	public void render(Window window, Camera camera, Scene scene) {
+	public void render(final Window window, final Camera camera, final Scene scene) {
 		clear();
 
 		// Render depth map before view ports has been set up
 		renderDepthMap(window, camera, scene);
 
-		glViewport(0, 0, window.getWidth(), window.getHeight());
+		GL11.glViewport(0, 0, window.getWidth(), window.getHeight());
 
 		// Update projection matrix once per render cycle
 		window.updateProjectionMatrix();
@@ -155,91 +131,54 @@ public class Renderer {
 		renderCrossHair(window);
 	}
 
-	/**
-	 * Renders the three axis in space (For debugging purposes only
-	 *
-	 * @param camera
-	 */
-	private void renderAxes(Window window, Camera camera) {
-		Window.WindowOptions opts = window.getWindowOptions();
-		if (opts.compatibleProfile) {
-			glPushMatrix();
-			glLoadIdentity();
-			float rotX = camera.getRotation().x;
-			float rotY = camera.getRotation().y;
-			float rotZ = 0;
-			glRotatef(rotX, 1.0f, 0.0f, 0.0f);
-			glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-			glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
-			glLineWidth(2.0f);
-
-			glBegin(GL_LINES);
-			// X Axis
-			glColor3f(1.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(1.0f, 0.0f, 0.0f);
-			// Y Axis
-			glColor3f(0.0f, 1.0f, 0.0f);
-			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, 1.0f, 0.0f);
-			// Z Axis
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, 0.0f, 1.0f);
-			glEnd();
-
-			glPopMatrix();
-		}
-	}
-
-	private void renderCrossHair(Window window) {
+	private void renderCrossHair(final Window window) {
 		if (window.getWindowOptions().compatibleProfile) {
-			glPushMatrix();
-			glLoadIdentity();
+			GL11.glPushMatrix();
+			GL11.glLoadIdentity();
 
-			float inc = 0.05f;
-			glLineWidth(2.0f);
+			final float inc = 0.05f;
+			GL11.glLineWidth(2.0f);
 
-			glBegin(GL_LINES);
+			GL11.glBegin(GL11.GL_LINES);
 
-			glColor3f(1.0f, 1.0f, 1.0f);
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
 
 			// Horizontal line
-			glVertex3f(-inc, 0.0f, 0.0f);
-			glVertex3f(+inc, 0.0f, 0.0f);
-			glEnd();
+			GL11.glVertex3f(-inc, 0.0f, 0.0f);
+			GL11.glVertex3f(+inc, 0.0f, 0.0f);
+			GL11.glEnd();
 
 			// Vertical line
-			glBegin(GL_LINES);
-			glVertex3f(0.0f, -inc, 0.0f);
-			glVertex3f(0.0f, +inc, 0.0f);
-			glEnd();
+			GL11.glBegin(GL11.GL_LINES);
+			GL11.glVertex3f(0.0f, -inc, 0.0f);
+			GL11.glVertex3f(0.0f, +inc, 0.0f);
+			GL11.glEnd();
 
-			glPopMatrix();
+			GL11.glPopMatrix();
 		}
 	}
 
-	private void renderDepthMap(Window window, Camera camera, Scene scene) {
+	private void renderDepthMap(final Window window, final Camera camera, final Scene scene) {
 		if (scene.isRenderShadows()) {
 			// Setup view port to match the texture size
-			glBindFramebuffer(GL_FRAMEBUFFER, shadowMap.getDepthMapFBO());
-			glViewport(0, 0, ShadowMap.SHADOW_MAP_WIDTH, ShadowMap.SHADOW_MAP_HEIGHT);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, shadowMap.getDepthMapFBO());
+			GL11.glViewport(0, 0, ShadowMap.SHADOW_MAP_WIDTH, ShadowMap.SHADOW_MAP_HEIGHT);
+			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
 			depthShaderProgram.bind();
 
-			DirectionalLight light = scene.getSceneLight().getDirectionalLight();
-			Vector3f lightDirection = light.getDirection();
+			final DirectionalLight light = scene.getSceneLight().getDirectionalLight();
+			final Vector3f lightDirection = light.getDirection();
 
-			float lightAngleX = (float) Math.toDegrees(Math.acos(lightDirection.z));
-			float lightAngleY = (float) Math.toDegrees(Math.asin(lightDirection.x));
-			float lightAngleZ = 0;
-			Matrix4f lightViewMatrix = transformation.updateLightViewMatrix(
+			final float lightAngleX = (float) Math.toDegrees(Math.acos(lightDirection.z));
+			final float lightAngleY = (float) Math.toDegrees(Math.asin(lightDirection.x));
+			final float lightAngleZ = 0;
+			final Matrix4f lightViewMatrix = transformation.updateLightViewMatrix(
 					new Vector3f(lightDirection).mul(light.getShadowPosMult()),
 					new Vector3f(lightAngleX, lightAngleY, lightAngleZ));
-			DirectionalLight.OrthoCoords orthCoords = light.getOrthoCoords();
-			Matrix4f orthoProjMatrix = transformation.updateOrthoProjectionMatrix(orthCoords.left, orthCoords.right,
-					orthCoords.bottom, orthCoords.top, orthCoords.near, orthCoords.far);
+			final DirectionalLight.OrthoCoords orthCoords = light.getOrthoCoords();
+			final Matrix4f orthoProjMatrix = transformation.updateOrthoProjectionMatrix(orthCoords.left,
+					orthCoords.right, orthCoords.bottom, orthCoords.top, orthCoords.near, orthCoords.far);
 
 			depthShaderProgram.setUniform("orthoProjectionMatrix", orthoProjMatrix);
 
@@ -249,18 +188,18 @@ public class Renderer {
 
 			// Unbind
 			depthShaderProgram.unbind();
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 		}
 	}
 
-	private void renderInstancedMeshes(Scene scene, ShaderProgram shader, Matrix4f viewMatrix,
-			Matrix4f lightViewMatrix) {
+	private void renderInstancedMeshes(final Scene scene, final ShaderProgram shader, final Matrix4f viewMatrix,
+			final Matrix4f lightViewMatrix) {
 		shader.setUniform("isInstanced", 1);
 
 		// Render each mesh with the associated game Items
-		Map<InstancedMesh, List<GameItem>> mapMeshes = scene.getGameInstancedMeshes();
-		for (InstancedMesh mesh : mapMeshes.keySet()) {
-			Texture text = mesh.getMaterial().getTexture();
+		final Map<InstancedMesh, List<GameItem>> mapMeshes = scene.getGameInstancedMeshes();
+		for (final InstancedMesh mesh : mapMeshes.keySet()) {
+			final Texture text = mesh.getMaterial().getTexture();
 			if (text != null) {
 				sceneShaderProgram.setUniform("numCols", text.getNumCols());
 				sceneShaderProgram.setUniform("numRows", text.getNumRows());
@@ -268,27 +207,27 @@ public class Renderer {
 
 			if (viewMatrix != null) {
 				shader.setUniform("material", mesh.getMaterial());
-				glActiveTexture(GL_TEXTURE2);
-				glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
+				GL13.glActiveTexture(GL13.GL_TEXTURE2);
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
 			}
 			mesh.renderListInstanced(mapMeshes.get(mesh), transformation, viewMatrix, lightViewMatrix);
 		}
 	}
 
-	private void renderLights(Matrix4f viewMatrix, SceneLight sceneLight) {
+	private void renderLights(final Matrix4f viewMatrix, final SceneLight sceneLight) {
 
 		sceneShaderProgram.setUniform("ambientLight", sceneLight.getAmbientLight());
 		sceneShaderProgram.setUniform("specularPower", specularPower);
 
 		// Process Point Lights
-		PointLight[] pointLightList = sceneLight.getPointLightList();
+		final PointLight[] pointLightList = sceneLight.getPointLightList();
 		int numLights = pointLightList != null ? pointLightList.length : 0;
 		for (int i = 0; i < numLights; i++) {
 			// Get a copy of the point light object and transform its position
 			// to view coordinates
-			PointLight currPointLight = new PointLight(pointLightList[i]);
-			Vector3f lightPos = currPointLight.getPosition();
-			Vector4f aux = new Vector4f(lightPos, 1);
+			final PointLight currPointLight = new PointLight(pointLightList[i]);
+			final Vector3f lightPos = currPointLight.getPosition();
+			final Vector4f aux = new Vector4f(lightPos, 1);
 			aux.mul(viewMatrix);
 			lightPos.x = aux.x;
 			lightPos.y = aux.y;
@@ -297,18 +236,18 @@ public class Renderer {
 		}
 
 		// Process Spot Ligths
-		SpotLight[] spotLightList = sceneLight.getSpotLightList();
+		final SpotLight[] spotLightList = sceneLight.getSpotLightList();
 		numLights = spotLightList != null ? spotLightList.length : 0;
 		for (int i = 0; i < numLights; i++) {
 			// Get a copy of the spot light object and transform its position
 			// and cone direction to view coordinates
-			SpotLight currSpotLight = new SpotLight(spotLightList[i]);
-			Vector4f dir = new Vector4f(currSpotLight.getConeDirection(), 0);
+			final SpotLight currSpotLight = new SpotLight(spotLightList[i]);
+			final Vector4f dir = new Vector4f(currSpotLight.getConeDirection(), 0);
 			dir.mul(viewMatrix);
 			currSpotLight.setConeDirection(new Vector3f(dir.x, dir.y, dir.z));
 
-			Vector3f lightPos = currSpotLight.getPointLight().getPosition();
-			Vector4f aux = new Vector4f(lightPos, 1);
+			final Vector3f lightPos = currSpotLight.getPointLight().getPosition();
+			final Vector4f aux = new Vector4f(lightPos, 1);
 			aux.mul(viewMatrix);
 			lightPos.x = aux.x;
 			lightPos.y = aux.y;
@@ -319,94 +258,95 @@ public class Renderer {
 
 		// Get a copy of the directional light object and transform its position
 		// to view coordinates
-		DirectionalLight currDirLight = new DirectionalLight(sceneLight.getDirectionalLight());
-		Vector4f dir = new Vector4f(currDirLight.getDirection(), 0);
+		final DirectionalLight currDirLight = new DirectionalLight(sceneLight.getDirectionalLight());
+		final Vector4f dir = new Vector4f(currDirLight.getDirection(), 0);
 		dir.mul(viewMatrix);
 		currDirLight.setDirection(new Vector3f(dir.x, dir.y, dir.z));
 		sceneShaderProgram.setUniform("directionalLight", currDirLight);
 	}
 
-	private void renderNonInstancedMeshes(Scene scene, ShaderProgram shader, Matrix4f viewMatrix,
-			Matrix4f lightViewMatrix) {
+	private void renderNonInstancedMeshes(final Scene scene, final ShaderProgram shader, final Matrix4f viewMatrix,
+			final Matrix4f lightViewMatrix) {
 		sceneShaderProgram.setUniform("isInstanced", 0);
 
 		// Render each mesh with the associated game Items
-		Map<Mesh, List<GameItem>> mapMeshes = scene.getGameMeshes();
-		for (Mesh mesh : mapMeshes.keySet()) {
+		final Map<Mesh, List<GameItem>> mapMeshes = scene.getGameMeshes();
+		for (final Mesh mesh : mapMeshes.keySet()) {
 			if (viewMatrix != null) {
 				shader.setUniform("material", mesh.getMaterial());
-				glActiveTexture(GL_TEXTURE2);
-				glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
+				GL13.glActiveTexture(GL13.GL_TEXTURE2);
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
 			}
 
-			Texture text = mesh.getMaterial().getTexture();
+			final Texture text = mesh.getMaterial().getTexture();
 			if (text != null) {
 				sceneShaderProgram.setUniform("numCols", text.getNumCols());
 				sceneShaderProgram.setUniform("numRows", text.getNumRows());
 			}
 
-			mesh.renderList(mapMeshes.get(mesh), (GameItem gameItem) -> {
+			mesh.renderList(mapMeshes.get(mesh), (final GameItem gameItem) -> {
 				sceneShaderProgram.setUniform("selectedNonInstanced", gameItem.isSelected() ? 1.0f : 0.0f);
-				Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
+				final Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
 				if (viewMatrix != null) {
-					Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
+					final Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
 					sceneShaderProgram.setUniform("modelViewNonInstancedMatrix", modelViewMatrix);
 				}
-				Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(modelMatrix, lightViewMatrix);
+				final Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(modelMatrix,
+						lightViewMatrix);
 				sceneShaderProgram.setUniform("modelLightViewNonInstancedMatrix", modelLightViewMatrix);
 
 				if (gameItem instanceof AnimGameItem) {
-					AnimGameItem animGameItem = (AnimGameItem) gameItem;
-					AnimatedFrame frame = animGameItem.getCurrentFrame();
+					final AnimGameItem animGameItem = (AnimGameItem) gameItem;
+					final AnimatedFrame frame = animGameItem.getCurrentFrame();
 					shader.setUniform("jointsMatrix", frame.getJointMatrices());
 				}
 			});
 		}
 	}
 
-	private void renderParticles(Window window, Camera camera, Scene scene) {
+	private void renderParticles(final Window window, final Camera camera, final Scene scene) {
 		particlesShaderProgram.bind();
 
 		particlesShaderProgram.setUniform("texture_sampler", 0);
-		Matrix4f projectionMatrix = window.getProjectionMatrix();
+		final Matrix4f projectionMatrix = window.getProjectionMatrix();
 		particlesShaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
-		Matrix4f viewMatrix = camera.getViewMatrix();
-		IParticleEmitter[] emitters = scene.getParticleEmitters();
-		int numEmitters = emitters != null ? emitters.length : 0;
+		final Matrix4f viewMatrix = camera.getViewMatrix();
+		final IParticleEmitter[] emitters = scene.getParticleEmitters();
+		final int numEmitters = emitters != null ? emitters.length : 0;
 
-		glDepthMask(false);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		GL11.glDepthMask(false);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
-		Matrix3f aux = new Matrix3f();
+		new Matrix3f();
 		for (int i = 0; i < numEmitters; i++) {
-			IParticleEmitter emitter = emitters[i];
-			InstancedMesh mesh = (InstancedMesh) emitter.getBaseParticle().getMesh();
+			final IParticleEmitter emitter = emitters[i];
+			final InstancedMesh mesh = (InstancedMesh) emitter.getBaseParticle().getMesh();
 
-			Texture text = mesh.getMaterial().getTexture();
+			final Texture text = mesh.getMaterial().getTexture();
 			particlesShaderProgram.setUniform("numCols", text.getNumCols());
 			particlesShaderProgram.setUniform("numRows", text.getNumRows());
 
 			mesh.renderListInstanced(emitter.getParticles(), true, transformation, viewMatrix, null);
 		}
 
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthMask(true);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glDepthMask(true);
 
 		particlesShaderProgram.unbind();
 	}
 
-	public void renderScene(Window window, Camera camera, Scene scene) {
+	public void renderScene(final Window window, final Camera camera, final Scene scene) {
 		sceneShaderProgram.bind();
 
-		Matrix4f projectionMatrix = window.getProjectionMatrix();
+		final Matrix4f projectionMatrix = window.getProjectionMatrix();
 		sceneShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-		Matrix4f orthoProjMatrix = transformation.getOrthoProjectionMatrix();
+		final Matrix4f orthoProjMatrix = transformation.getOrthoProjectionMatrix();
 		sceneShaderProgram.setUniform("orthoProjectionMatrix", orthoProjMatrix);
-		Matrix4f lightViewMatrix = transformation.getLightViewMatrix();
-		Matrix4f viewMatrix = camera.getViewMatrix();
+		final Matrix4f lightViewMatrix = transformation.getLightViewMatrix();
+		final Matrix4f viewMatrix = camera.getViewMatrix();
 
-		SceneLight sceneLight = scene.getSceneLight();
+		final SceneLight sceneLight = scene.getSceneLight();
 		renderLights(viewMatrix, sceneLight);
 
 		sceneShaderProgram.setUniform("fog", scene.getFog());
@@ -422,25 +362,25 @@ public class Renderer {
 		sceneShaderProgram.unbind();
 	}
 
-	private void renderSkyBox(Window window, Camera camera, Scene scene) {
-		SkyBox skyBox = scene.getSkyBox();
+	private void renderSkyBox(final Window window, final Camera camera, final Scene scene) {
+		final SkyBox skyBox = scene.getSkyBox();
 		if (skyBox != null) {
 			skyBoxShaderProgram.bind();
 
 			skyBoxShaderProgram.setUniform("texture_sampler", 0);
 
-			Matrix4f projectionMatrix = window.getProjectionMatrix();
+			final Matrix4f projectionMatrix = window.getProjectionMatrix();
 			skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-			Matrix4f viewMatrix = camera.getViewMatrix();
-			float m30 = viewMatrix.m30();
+			final Matrix4f viewMatrix = camera.getViewMatrix();
+			final float m30 = viewMatrix.m30();
 			viewMatrix.m30(0);
-			float m31 = viewMatrix.m31();
+			final float m31 = viewMatrix.m31();
 			viewMatrix.m31(0);
-			float m32 = viewMatrix.m32();
+			final float m32 = viewMatrix.m32();
 			viewMatrix.m32(0);
 
-			Mesh mesh = skyBox.getMesh();
-			Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
+			final Mesh mesh = skyBox.getMesh();
+			final Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
 			skyBoxShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 			skyBoxShaderProgram.setUniform("ambientLight", scene.getSceneLight().getSkyBoxLight());
 			skyBoxShaderProgram.setUniform("colour", mesh.getMaterial().getColour());
@@ -484,8 +424,8 @@ public class Renderer {
 		// Create lighting related uniforms
 		sceneShaderProgram.createUniform("specularPower");
 		sceneShaderProgram.createUniform("ambientLight");
-		sceneShaderProgram.createPointLightListUniform("pointLights", MAX_POINT_LIGHTS);
-		sceneShaderProgram.createSpotLightListUniform("spotLights", MAX_SPOT_LIGHTS);
+		sceneShaderProgram.createPointLightListUniform("pointLights", Renderer.MAX_POINT_LIGHTS);
+		sceneShaderProgram.createSpotLightListUniform("spotLights", Renderer.MAX_SPOT_LIGHTS);
 		sceneShaderProgram.createDirectionalLightUniform("directionalLight");
 		sceneShaderProgram.createFogUniform("fog");
 

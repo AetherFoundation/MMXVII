@@ -27,14 +27,15 @@ public class MouseBoxSelectionDetector extends CameraBoxSelectionDetector {
 		tmpVec = new Vector4f();
 	}
 
-	public boolean selectGameItem(GameItem[] gameItems, Window window, Vector2d mousePos, Camera camera) {
+	public boolean selectGameItem(final GameItem[] gameItems, final Window window, final Vector2d mousePos,
+			final Camera camera) {
 		// Transform mouse coordinates into normalized space [-1, 1]
-		int wdwWitdh = window.getWidth();
-		int wdwHeight = window.getHeight();
+		final int wdwWitdh = window.getWidth();
+		final int wdwHeight = window.getHeight();
 
-		float x = (float) (2 * mousePos.x) / (float) wdwWitdh - 1.0f;
-		float y = 1.0f - (float) (2 * mousePos.y) / (float) wdwHeight;
-		float z = -1.0f;
+		final float x = ((float) (2 * mousePos.x) / wdwWitdh) - 1.0f;
+		final float y = 1.0f - ((float) (2 * mousePos.y) / wdwHeight);
+		final float z = -1.0f;
 
 		invProjectionMatrix.set(window.getProjectionMatrix());
 		invProjectionMatrix.invert();
@@ -44,7 +45,7 @@ public class MouseBoxSelectionDetector extends CameraBoxSelectionDetector {
 		tmpVec.z = -1.0f;
 		tmpVec.w = 0.0f;
 
-		Matrix4f viewMatrix = camera.getViewMatrix();
+		final Matrix4f viewMatrix = camera.getViewMatrix();
 		invViewMatrix.set(viewMatrix);
 		invViewMatrix.invert();
 		tmpVec.mul(invViewMatrix);

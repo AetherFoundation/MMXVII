@@ -27,20 +27,20 @@ public class GameItem {
 		textPos = 0;
 	}
 
-	public GameItem(Mesh mesh) {
+	public GameItem(final Mesh mesh) {
 		this();
-		this.meshes = new Mesh[] { mesh };
+		meshes = new Mesh[] { mesh };
 	}
 
-	public GameItem(Mesh[] meshes) {
+	public GameItem(final Mesh[] meshes) {
 		this();
 		this.meshes = meshes;
 	}
 
 	public void cleanup() {
-		int numMeshes = this.meshes != null ? this.meshes.length : 0;
+		final int numMeshes = meshes != null ? meshes.length : 0;
 		for (int i = 0; i < numMeshes; i++) {
-			this.meshes[i].cleanUp();
+			meshes[i].cleanUp();
 		}
 	}
 
@@ -72,33 +72,33 @@ public class GameItem {
 		return selected;
 	}
 
-	public void setMesh(Mesh mesh) {
-		this.meshes = new Mesh[] { mesh };
+	public void setMesh(final Mesh mesh) {
+		meshes = new Mesh[] { mesh };
 	}
 
-	public void setMeshes(Mesh[] meshes) {
+	public void setMeshes(final Mesh[] meshes) {
 		this.meshes = meshes;
 	}
 
-	public final void setPosition(float x, float y, float z) {
-		this.position.x = x;
-		this.position.y = y;
-		this.position.z = z;
+	public final void setPosition(final float x, final float y, final float z) {
+		position.x = x;
+		position.y = y;
+		position.z = z;
 	}
 
-	public final void setRotation(Quaternionf q) {
-		this.rotation.set(q);
+	public final void setRotation(final Quaternionf q) {
+		rotation.set(q);
 	}
 
-	public final void setScale(float scale) {
+	public final void setScale(final float scale) {
 		this.scale = scale;
 	}
 
-	public void setSelected(boolean selected) {
+	public void setSelected(final boolean selected) {
 		this.selected = selected;
 	}
 
-	public void setTextPos(int textPos) {
+	public void setTextPos(final int textPos) {
 		this.textPos = textPos;
 	}
 }

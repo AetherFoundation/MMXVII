@@ -36,14 +36,14 @@ public class Scene {
 	}
 
 	public void cleanup() {
-		for (Mesh mesh : meshMap.keySet()) {
+		for (final Mesh mesh : meshMap.keySet()) {
 			mesh.cleanUp();
 		}
-		for (Mesh mesh : instancedMeshMap.keySet()) {
+		for (final Mesh mesh : instancedMeshMap.keySet()) {
 			mesh.cleanUp();
 		}
 		if (particleEmitters != null) {
-			for (IParticleEmitter particleEmitter : particleEmitters) {
+			for (final IParticleEmitter particleEmitter : particleEmitters) {
 				particleEmitter.cleanup();
 			}
 		}
@@ -84,18 +84,18 @@ public class Scene {
 	 * @param fog
 	 *            the fog to set
 	 */
-	public void setFog(Fog fog) {
+	public void setFog(final Fog fog) {
 		this.fog = fog;
 	}
 
-	public void setGameItems(GameItem[] gameItems) {
+	public void setGameItems(final GameItem[] gameItems) {
 		// Create a map of meshes to speed up rendering
-		int numGameItems = gameItems != null ? gameItems.length : 0;
+		final int numGameItems = gameItems != null ? gameItems.length : 0;
 		for (int i = 0; i < numGameItems; i++) {
-			GameItem gameItem = gameItems[i];
-			Mesh[] meshes = gameItem.getMeshes();
-			for (Mesh mesh : meshes) {
-				boolean instancedMesh = mesh instanceof InstancedMesh;
+			final GameItem gameItem = gameItems[i];
+			final Mesh[] meshes = gameItem.getMeshes();
+			for (final Mesh mesh : meshes) {
+				final boolean instancedMesh = mesh instanceof InstancedMesh;
 				List<GameItem> list = instancedMesh ? instancedMeshMap.get(mesh) : meshMap.get(mesh);
 				if (list == null) {
 					list = new ArrayList<>();
@@ -110,19 +110,19 @@ public class Scene {
 		}
 	}
 
-	public void setParticleEmitters(IParticleEmitter[] particleEmitters) {
+	public void setParticleEmitters(final IParticleEmitter[] particleEmitters) {
 		this.particleEmitters = particleEmitters;
 	}
 
-	public void setRenderShadows(boolean renderShadows) {
+	public void setRenderShadows(final boolean renderShadows) {
 		this.renderShadows = renderShadows;
 	}
 
-	public void setSceneLight(SceneLight sceneLight) {
+	public void setSceneLight(final SceneLight sceneLight) {
 		this.sceneLight = sceneLight;
 	}
 
-	public void setSkyBox(SkyBox skyBox) {
+	public void setSkyBox(final SkyBox skyBox) {
 		this.skyBox = skyBox;
 	}
 

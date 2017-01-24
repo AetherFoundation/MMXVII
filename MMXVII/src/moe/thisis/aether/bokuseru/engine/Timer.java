@@ -5,8 +5,8 @@ public class Timer {
 	private double lastLoopTime;
 
 	public float getElapsedTime() {
-		double time = getTime();
-		float elapsedTime = (float) (time - lastLoopTime);
+		final double time = getTime();
+		final float elapsedTime = (float) (time - lastLoopTime);
 		lastLoopTime = time;
 		return elapsedTime;
 	}

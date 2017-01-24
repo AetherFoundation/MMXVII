@@ -24,7 +24,7 @@ public class FontTexture {
 
 		private final int width;
 
-		public CharInfo(int startX, int width) {
+		public CharInfo(final int startX, final int width) {
 			this.startX = startX;
 			this.width = width;
 		}
@@ -52,7 +52,7 @@ public class FontTexture {
 
 	private int width;
 
-	public FontTexture(Font font, String charSetName) throws Exception {
+	public FontTexture(final Font font, final String charSetName) throws Exception {
 		this.font = font;
 		this.charSetName = charSetName;
 		charMap = new HashMap<>();
@@ -68,12 +68,12 @@ public class FontTexture {
 		g2D.setFont(font);
 		FontMetrics fontMetrics = g2D.getFontMetrics();
 
-		String allChars = getAllAvailableChars(charSetName);
-		this.width = 0;
-		this.height = 0;
-		for (char c : allChars.toCharArray()) {
+		final String allChars = getAllAvailableChars(charSetName);
+		width = 0;
+		height = 0;
+		for (final char c : allChars.toCharArray()) {
 			// Get the size for each character and update global image size
-			CharInfo charInfo = new CharInfo(width, fontMetrics.charWidth(c));
+			final CharInfo charInfo = new CharInfo(width, fontMetrics.charWidth(c));
 			charMap.put(c, charInfo);
 			width += charInfo.getWidth();
 			height = Math.max(height, fontMetrics.getHeight());
@@ -93,7 +93,7 @@ public class FontTexture {
 		// Dump image to a byte buffer
 		InputStream is;
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-			ImageIO.write(img, IMAGE_FORMAT, out);
+			ImageIO.write(img, FontTexture.IMAGE_FORMAT, out);
 			out.flush();
 			is = new ByteArrayInputStream(out.toByteArray());
 		}
@@ -101,9 +101,9 @@ public class FontTexture {
 		texture = new Texture(is);
 	}
 
-	private String getAllAvailableChars(String charsetName) {
-		CharsetEncoder ce = Charset.forName(charsetName).newEncoder();
-		StringBuilder result = new StringBuilder();
+	private String getAllAvailableChars(final String charsetName) {
+		final CharsetEncoder ce = Charset.forName(charsetName).newEncoder();
+		final StringBuilder result = new StringBuilder();
 		for (char c = 0; c < Character.MAX_VALUE; c++) {
 			if (ce.canEncode(c)) {
 				result.append(c);
@@ -112,7 +112,7 @@ public class FontTexture {
 		return result.toString();
 	}
 
-	public CharInfo getCharInfo(char c) {
+	public CharInfo getCharInfo(final char c) {
 		return charMap.get(c);
 	}
 

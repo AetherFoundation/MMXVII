@@ -9,19 +9,19 @@ import moe.thisis.aether.bokuseru.engine.loaders.obj.OBJLoader;
 
 public class SkyBox extends GameItem {
 
-	public SkyBox(String objModel, String textureFile) throws Exception {
+	public SkyBox(final String objModel, final String textureFile) throws Exception {
 		super();
-		Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
-		Texture skyBoxtexture = new Texture(textureFile);
+		final Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
+		final Texture skyBoxtexture = new Texture(textureFile);
 		skyBoxMesh.setMaterial(new Material(skyBoxtexture, 0.0f));
 		setMesh(skyBoxMesh);
 		setPosition(0, 0, 0);
 	}
 
-	public SkyBox(String objModel, Vector3f colour) throws Exception {
+	public SkyBox(final String objModel, final Vector3f colour) throws Exception {
 		super();
-		Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
-		Material material = new Material(colour, 0);
+		final Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
+		final Material material = new Material(colour, 0);
 		skyBoxMesh.setMaterial(material);
 		setMesh(skyBoxMesh);
 		setPosition(0, 0, 0);

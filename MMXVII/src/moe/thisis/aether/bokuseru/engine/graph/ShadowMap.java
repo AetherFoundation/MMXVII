@@ -1,18 +1,7 @@
 package moe.thisis.aether.bokuseru.engine.graph;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_NONE;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDrawBuffer;
-import static org.lwjgl.opengl.GL11.glReadBuffer;
-import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
-import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
-import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
-import static org.lwjgl.opengl.GL30.glGenFramebuffers;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 public class ShadowMap {
 
@@ -26,28 +15,29 @@ public class ShadowMap {
 
 	public ShadowMap() throws Exception {
 		// Create a FBO to render the depth map
-		depthMapFBO = glGenFramebuffers();
+		depthMapFBO = GL30.glGenFramebuffers();
 
 		// Create the depth map texture
-		depthMap = new Texture(SHADOW_MAP_WIDTH, SHADOW_MAP_HEIGHT, GL_DEPTH_COMPONENT);
+		depthMap = new Texture(ShadowMap.SHADOW_MAP_WIDTH, ShadowMap.SHADOW_MAP_HEIGHT, GL11.GL_DEPTH_COMPONENT);
 
 		// Attach the the depth map texture to the FBO
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap.getId(), 0);
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, depthMapFBO);
+		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthMap.getId(),
+				0);
 		// Set only depth
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
+		GL11.glDrawBuffer(GL11.GL_NONE);
+		GL11.glReadBuffer(GL11.GL_NONE);
 
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE) {
 			throw new Exception("Could not create FrameBuffer");
 		}
 
 		// Unbind
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 	}
 
 	public void cleanup() {
-		glDeleteFramebuffers(depthMapFBO);
+		GL30.glDeleteFramebuffers(depthMapFBO);
 		depthMap.cleanup();
 	}
 

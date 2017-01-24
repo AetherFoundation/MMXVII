@@ -13,9 +13,9 @@ public class AnimGameItem extends GameItem {
 
 	private List<AnimatedFrame> frames;
 
-	private List<Matrix4f> invJointMatrices;
+	private final List<Matrix4f> invJointMatrices;
 
-	public AnimGameItem(Mesh[] meshes, List<AnimatedFrame> frames, List<Matrix4f> invJointMatrices) {
+	public AnimGameItem(final Mesh[] meshes, final List<AnimatedFrame> frames, final List<Matrix4f> invJointMatrices) {
 		super(meshes);
 		this.frames = frames;
 		this.invJointMatrices = invJointMatrices;
@@ -23,7 +23,7 @@ public class AnimGameItem extends GameItem {
 	}
 
 	public AnimatedFrame getCurrentFrame() {
-		return this.frames.get(currentFrame);
+		return frames.get(currentFrame);
 	}
 
 	public List<AnimatedFrame> getFrames() {
@@ -36,22 +36,22 @@ public class AnimGameItem extends GameItem {
 
 	public AnimatedFrame getNextFrame() {
 		int nextFrame = currentFrame + 1;
-		if (nextFrame > frames.size() - 1) {
+		if (nextFrame > (frames.size() - 1)) {
 			nextFrame = 0;
 		}
-		return this.frames.get(nextFrame);
+		return frames.get(nextFrame);
 	}
 
 	public void nextFrame() {
-		int nextFrame = currentFrame + 1;
-		if (nextFrame > frames.size() - 1) {
+		final int nextFrame = currentFrame + 1;
+		if (nextFrame > (frames.size() - 1)) {
 			currentFrame = 0;
 		} else {
 			currentFrame = nextFrame;
 		}
 	}
 
-	public void setFrames(List<AnimatedFrame> frames) {
+	public void setFrames(final List<AnimatedFrame> frames) {
 		this.frames = frames;
 	}
 }

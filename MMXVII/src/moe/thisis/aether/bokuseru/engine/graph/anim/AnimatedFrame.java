@@ -15,11 +15,11 @@ public class AnimatedFrame {
 	private final Matrix4f[] jointMatrices;
 
 	public AnimatedFrame() {
-		localJointMatrices = new Matrix4f[MAX_JOINTS];
-		Arrays.fill(localJointMatrices, IDENTITY_MATRIX);
+		localJointMatrices = new Matrix4f[AnimatedFrame.MAX_JOINTS];
+		Arrays.fill(localJointMatrices, AnimatedFrame.IDENTITY_MATRIX);
 
-		jointMatrices = new Matrix4f[MAX_JOINTS];
-		Arrays.fill(jointMatrices, IDENTITY_MATRIX);
+		jointMatrices = new Matrix4f[AnimatedFrame.MAX_JOINTS];
+		Arrays.fill(jointMatrices, AnimatedFrame.IDENTITY_MATRIX);
 	}
 
 	public Matrix4f[] getJointMatrices() {
@@ -30,9 +30,9 @@ public class AnimatedFrame {
 		return localJointMatrices;
 	}
 
-	public void setMatrix(int pos, Matrix4f localJointMatrix, Matrix4f invJointMatrix) {
+	public void setMatrix(final int pos, final Matrix4f localJointMatrix, final Matrix4f invJointMatrix) {
 		localJointMatrices[pos] = localJointMatrix;
-		Matrix4f mat = new Matrix4f(localJointMatrix);
+		final Matrix4f mat = new Matrix4f(localJointMatrix);
 		mat.mul(invJointMatrix);
 		jointMatrices[pos] = mat;
 	}

@@ -17,7 +17,7 @@ public class Camera {
 		viewMatrix = new Matrix4f();
 	}
 
-	public Camera(Vector3f position, Vector3f rotation) {
+	public Camera(final Vector3f position, final Vector3f rotation) {
 		this.position = position;
 		this.rotation = rotation;
 	}
@@ -34,7 +34,7 @@ public class Camera {
 		return viewMatrix;
 	}
 
-	public void movePosition(float offsetX, float offsetY, float offsetZ) {
+	public void movePosition(final float offsetX, final float offsetY, final float offsetZ) {
 		if (offsetZ != 0) {
 			position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1.0f * offsetZ;
 			position.z += (float) Math.cos(Math.toRadians(rotation.y)) * offsetZ;
@@ -46,19 +46,19 @@ public class Camera {
 		position.y += offsetY;
 	}
 
-	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
+	public void moveRotation(final float offsetX, final float offsetY, final float offsetZ) {
 		rotation.x += offsetX;
 		rotation.y += offsetY;
 		rotation.z += offsetZ;
 	}
 
-	public void setPosition(float x, float y, float z) {
+	public void setPosition(final float x, final float y, final float z) {
 		position.x = x;
 		position.y = y;
 		position.z = z;
 	}
 
-	public void setRotation(float x, float y, float z) {
+	public void setRotation(final float x, final float y, final float z) {
 		rotation.x = x;
 		rotation.y = y;
 		rotation.z = z;

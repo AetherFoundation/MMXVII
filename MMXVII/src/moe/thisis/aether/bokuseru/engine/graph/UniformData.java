@@ -8,7 +8,7 @@ public class UniformData {
 
 	private FloatBuffer floatBuffer;
 
-	public UniformData(int uniformLocation) {
+	public UniformData(final int uniformLocation) {
 		this.uniformLocation = uniformLocation;
 	}
 
@@ -20,7 +20,7 @@ public class UniformData {
 		return uniformLocation;
 	}
 
-	public void setFloatBuffer(FloatBuffer floatBuffer) {
+	public void setFloatBuffer(final FloatBuffer floatBuffer) {
 		this.floatBuffer = floatBuffer;
 	}
 }

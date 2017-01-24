@@ -51,9 +51,9 @@ public class Renderer {
         shadowMap = new ShadowMap();
 
         setupDepthShader();
-        setupSkyBoxShader();
+        //setupSkyBoxShader();
         setupSceneShader();
-        setupParticlesShader();
+        //setupParticlesShader();
     }
 
     public void render(Window window, Camera camera, Scene scene) {
@@ -74,7 +74,8 @@ public class Renderer {
         //renderAxes(camera);
         renderCrossHair(window);
     }
-
+    
+    /*
     private void setupParticlesShader() throws Exception {
         particlesShaderProgram = new ShaderProgram();
         particlesShaderProgram.createVertexShader(Utils.loadResource("/shaders/particles_vertex.vs"));
@@ -87,7 +88,8 @@ public class Renderer {
         particlesShaderProgram.createUniform("numCols");
         particlesShaderProgram.createUniform("numRows");
     }
-
+	*/
+    
     private void setupDepthShader() throws Exception {
         depthShaderProgram = new ShaderProgram();
         depthShaderProgram.createVertexShader(Utils.loadResource("/shaders/depth_vertex.vs"));
@@ -99,7 +101,8 @@ public class Renderer {
         depthShaderProgram.createUniform("modelLightViewNonInstancedMatrix");
         depthShaderProgram.createUniform("orthoProjectionMatrix");
     }
-
+    
+    /*
     private void setupSkyBoxShader() throws Exception {
         skyBoxShaderProgram = new ShaderProgram();
         skyBoxShaderProgram.createVertexShader(Utils.loadResource("/shaders/sb_vertex.vs"));
@@ -114,6 +117,7 @@ public class Renderer {
         skyBoxShaderProgram.createUniform("colour");
         skyBoxShaderProgram.createUniform("hasTexture");
     }
+	*/
 
     private void setupSceneShader() throws Exception {
         // Create shader

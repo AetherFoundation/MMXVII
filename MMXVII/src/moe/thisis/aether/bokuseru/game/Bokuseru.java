@@ -18,11 +18,7 @@ import moe.thisis.aether.bokuseru.engine.graph.Mesh;
 import moe.thisis.aether.bokuseru.engine.graph.Renderer;
 import moe.thisis.aether.bokuseru.engine.graph.Texture;
 import moe.thisis.aether.bokuseru.engine.graph.lights.DirectionalLight;
-import moe.thisis.aether.bokuseru.engine.graph.particles.FlowParticleEmitter;
-import moe.thisis.aether.bokuseru.engine.graph.particles.Particle;
-import moe.thisis.aether.bokuseru.engine.graph.weather.Fog;
 import moe.thisis.aether.bokuseru.engine.items.GameItem;
-import moe.thisis.aether.bokuseru.engine.items.SkyBox;
 import moe.thisis.aether.bokuseru.engine.items.Terrain;
 import moe.thisis.aether.bokuseru.engine.loaders.obj.OBJLoader;
 import moe.thisis.aether.bokuseru.engine.sound.SoundBuffer;
@@ -54,14 +50,12 @@ public class Bokuseru implements IGameLogic {
 
     private float lightAngle;
 
-    private FlowParticleEmitter particleEmitter;
-
     private MouseBoxSelectionDetector selectDetector;
 
     private boolean leftButtonPressed;
     
     private enum Sounds {
-        MUSIC, BEEP, FIRE
+        MUSIC, BEEP
     };
 
     private GameItem[] gameItems;
@@ -133,42 +127,13 @@ public class Bokuseru implements IGameLogic {
             posz -= inc;
         }
         scene.setGameItems(gameItems);
-
-        /*
-         * // Particles
-        int maxParticles = 200;
-        Vector3f particleSpeed = new Vector3f(0, 1, 0);
-        particleSpeed.mul(2.5f);
-        long ttl = 4000;
-        long creationPeriodMillis = 300;
-        float range = 0.2f;
-        float scale = 0.2f;
-        Mesh partMesh = OBJLoader.loadMesh("/models/particle.obj", maxParticles);
-        Texture particleTexture = new Texture("/textures/particle_anim.png", 4, 4);
-        Material partMaterial = new Material(particleTexture, reflectance);
-        partMesh.setMaterial(partMaterial);
-        Particle particle = new Particle(partMesh, particleSpeed, ttl, 100);
-        particle.setScale(scale);
-        particleEmitter = new FlowParticleEmitter(particle, maxParticles, creationPeriodMillis);
-        particleEmitter.setActive(true);
-        particleEmitter.setPositionRndRange(range);
-        particleEmitter.setSpeedRndRange(range);
-        particleEmitter.setAnimRange(10);
-        this.scene.setParticleEmitters(new FlowParticleEmitter[]{particleEmitter});
-         */
         
-
         // Shadows
         scene.setRenderShadows(false);
 
         // Fog
         //Vector3f fogColour = new Vector3f(0.5f, 0.5f, 0.5f);
         //scene.setFog(new Fog(true, fogColour, 0.02f));
-
-        // Setup  SkyBox
-        //SkyBox skyBox = new SkyBox("/models/skybox.obj", new Vector3f(0.65f, 0.65f, 0.65f));
-        //skyBox.setScale(skyBoxScale);
-        //scene.setSkyBox(skyBox);
 
         // Setup Lights
         setupLights();
@@ -197,18 +162,6 @@ public class Bokuseru implements IGameLogic {
         SoundSource sourceBeep = new SoundSource(false, true);
         sourceBeep.setBuffer(buffBeep.getBufferId());
         soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
-
-        /*
-         * SoundBuffer buffFire = new SoundBuffer("/sounds/fire.ogg");
-        soundMgr.addSoundBuffer(buffFire);
-        SoundSource sourceFire = new SoundSource(true, false);
-        Vector3f pos = particleEmitter.getBaseParticle().getPosition();
-        sourceFire.setPosition(pos);
-        sourceFire.setBuffer(buffFire.getBufferId());
-        soundMgr.addSoundSource(Sounds.FIRE.toString(), sourceFire);
-        sourceFire.play();
-         */
-        
 
         soundMgr.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
@@ -293,8 +246,6 @@ public class Bokuseru implements IGameLogic {
         lightDirection.y = yValue;
         lightDirection.z = zValue;
         lightDirection.normalize();
-
-        //particleEmitter.update((long) (interval * 1000));
 
         // Update view matrix
         camera.updateViewMatrix();

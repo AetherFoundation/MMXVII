@@ -16,6 +16,13 @@ public class HeightMapMesh {
 
 	public static final float STARTZ = -0.5f;
 
+	/** Get RGBA data at a point
+	 * @param x	X coordinate
+	 * @param z	Z coordinate
+	 * @param width	Width
+	 * @param buffer	Input buffer
+	 * @return	RGBA data
+	 */
 	public static int getRGB(final int x, final int z, final int width, final ByteBuffer buffer) {
 		final byte r = buffer.get((x * 4) + 0 + (z * 4 * width));
 		final byte g = buffer.get((x * 4) + 1 + (z * 4 * width));
@@ -25,10 +32,16 @@ public class HeightMapMesh {
 		return argb;
 	}
 
+	/**
+	 * @return	X length
+	 */
 	public static float getXLength() {
 		return Math.abs(-HeightMapMesh.STARTX * 2);
 	}
 
+	/**
+	 * @return	Z length
+	 */
 	public static float getZLength() {
 		return Math.abs(-HeightMapMesh.STARTZ * 2);
 	}
@@ -41,6 +54,16 @@ public class HeightMapMesh {
 
 	private final float[][] heightArray;
 
+	/** Height Map Mesh Constructor
+	 * @param minY	Minimum Y value
+	 * @param maxY	Maximum Y value
+	 * @param heightMapImage	Height map image
+	 * @param width	Height map width
+	 * @param height	Height map height
+	 * @param textureFile	Terrain texture file
+	 * @param textInc
+	 * @throws Exception
+	 */
 	public HeightMapMesh(final float minY, final float maxY, final ByteBuffer heightMapImage, final int width,
 			final int height, final String textureFile, final int textInc) throws Exception {
 		this.minY = minY;
@@ -96,6 +119,12 @@ public class HeightMapMesh {
 		mesh.setMaterial(material);
 	}
 
+	/** Calculate normals
+	 * @param posArr	Position array
+	 * @param width	Width
+	 * @param height	Height
+	 * @return	Normals
+	 */
 	private float[] calcNormals(final float[] posArr, final int width, final int height) {
 		final Vector3f v0 = new Vector3f();
 		Vector3f v1 = new Vector3f();
@@ -168,6 +197,11 @@ public class HeightMapMesh {
 		return Utils.listToArray(normals);
 	}
 
+	/** Get height on the grid
+	 * @param row	Row
+	 * @param col	Column
+	 * @return	Height
+	 */
 	public float getHeight(final int row, final int col) {
 		float result = 0;
 		if ((row >= 0) && (row < heightArray.length)) {
@@ -178,11 +212,21 @@ public class HeightMapMesh {
 		return result;
 	}
 
+	/** Get height at a point
+	 * @param x	X coordinate
+	 * @param z	Z coordinate
+	 * @param width	Width
+	 * @param buffer	Input buffer
+	 * @return	Height
+	 */
 	private float getHeight(final int x, final int z, final int width, final ByteBuffer buffer) {
 		final int argb = HeightMapMesh.getRGB(x, z, width, buffer);
 		return minY + (Math.abs(maxY - minY) * ((float) argb / (float) HeightMapMesh.MAX_COLOUR));
 	}
 
+	/**
+	 * @return	Height map mesh
+	 */
 	public Mesh getMesh() {
 		return mesh;
 	}

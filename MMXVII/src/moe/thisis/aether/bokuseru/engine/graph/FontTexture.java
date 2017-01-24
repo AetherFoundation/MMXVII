@@ -24,15 +24,25 @@ public class FontTexture {
 
 		private final int width;
 
+		/** Set character info
+		 * @param startX	Starting X value
+		 * @param width	Width
+		 */
 		public CharInfo(final int startX, final int width) {
 			this.startX = startX;
 			this.width = width;
 		}
 
+		/** Get start X
+		 * @return Starting X value
+		 */
 		public int getStartX() {
 			return startX;
 		}
 
+		/** Get width
+		 * @return	Width
+		 */
 		public int getWidth() {
 			return width;
 		}
@@ -52,6 +62,11 @@ public class FontTexture {
 
 	private int width;
 
+	/** Font Texture Constructor
+	 * @param font	Font
+	 * @param charSetName	Character set name
+	 * @throws Exception
+	 */
 	public FontTexture(final Font font, final String charSetName) throws Exception {
 		this.font = font;
 		this.charSetName = charSetName;
@@ -101,6 +116,10 @@ public class FontTexture {
 		texture = new Texture(is);
 	}
 
+	/** Get all available characters
+	 * @param charsetName	Character set
+	 * @return	Available characters
+	 */
 	private String getAllAvailableChars(final String charsetName) {
 		final CharsetEncoder ce = Charset.forName(charsetName).newEncoder();
 		final StringBuilder result = new StringBuilder();
@@ -112,18 +131,31 @@ public class FontTexture {
 		return result.toString();
 	}
 
+	/** Get character info
+	 * @param c Character
+	 * @return Character info
+	 */
 	public CharInfo getCharInfo(final char c) {
 		return charMap.get(c);
 	}
 
+	/**
+	 * @return	Height
+	 */
 	public int getHeight() {
 		return height;
 	}
 
+	/**
+	 * @return	Texture
+	 */
 	public Texture getTexture() {
 		return texture;
 	}
 
+	/**
+	 * @return	Width
+	 */
 	public int getWidth() {
 		return width;
 	}

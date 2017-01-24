@@ -28,6 +28,9 @@ public class Scene {
 
 	private IParticleEmitter[] particleEmitters;
 
+	/** Scene Constructor
+	 * 
+	 */
 	public Scene() {
 		meshMap = new HashMap();
 		instancedMeshMap = new HashMap();
@@ -35,6 +38,9 @@ public class Scene {
 		renderShadows = true;
 	}
 
+	/** Cleanup the scene by removing all contents
+	 * 
+	 */
 	public void cleanup() {
 		for (final Mesh mesh : meshMap.keySet()) {
 			mesh.cleanUp();
@@ -50,44 +56,65 @@ public class Scene {
 	}
 
 	/**
-	 * @return the fog
+	 * @return 	Fog
 	 */
 	public Fog getFog() {
 		return fog;
 	}
 
+	/**
+	 * @return	Current instanced mesh map
+	 */
 	public Map<InstancedMesh, List<GameItem>> getGameInstancedMeshes() {
 		return instancedMeshMap;
 	}
 
+	/**
+	 * @return	Current mesh map
+	 */
 	public Map<Mesh, List<GameItem>> getGameMeshes() {
 		return meshMap;
 	}
 
+	/**
+	 * @return	Particle emitters in scene
+	 */
 	public IParticleEmitter[] getParticleEmitters() {
 		return particleEmitters;
 	}
 
+	/**
+	 * @return	Current scene light
+	 */
 	public SceneLight getSceneLight() {
 		return sceneLight;
 	}
 
+	/**
+	 * @return	Current skybox
+	 */
 	public SkyBox getSkyBox() {
 		return skyBox;
 	}
 
+	/**
+	 * @return	Status of render shadows
+	 */
 	public boolean isRenderShadows() {
 		return renderShadows;
 	}
 
 	/**
 	 * @param fog
-	 *            the fog to set
+	 *            Fog to set
 	 */
 	public void setFog(final Fog fog) {
 		this.fog = fog;
 	}
 
+	/** Set game items inside the scene
+	 * @param gameItems	Array of game items to add
+	 */
 	public void setGameItems(final GameItem[] gameItems) {
 		// Create a map of meshes to speed up rendering
 		final int numGameItems = gameItems != null ? gameItems.length : 0;
@@ -110,18 +137,30 @@ public class Scene {
 		}
 	}
 
+	/**
+	 * @param particleEmitters	Particle emitters to use
+	 */
 	public void setParticleEmitters(final IParticleEmitter[] particleEmitters) {
 		this.particleEmitters = particleEmitters;
 	}
 
+	/**
+	 * @param renderShadows	Enable or disable render shadows
+	 */
 	public void setRenderShadows(final boolean renderShadows) {
 		this.renderShadows = renderShadows;
 	}
 
+	/**
+	 * @param sceneLight	Scene light to use
+	 */
 	public void setSceneLight(final SceneLight sceneLight) {
 		this.sceneLight = sceneLight;
 	}
 
+	/**
+	 * @param skyBox	Skybox to use
+	 */
 	public void setSkyBox(final SkyBox skyBox) {
 		this.skyBox = skyBox;
 	}

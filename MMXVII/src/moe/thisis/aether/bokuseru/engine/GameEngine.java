@@ -69,7 +69,6 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Clear the state of the game logic
-	 *
 	 */
 	protected void cleanup() {
 		gameLogic.cleanup();
@@ -77,7 +76,6 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Game engine execution loop
-	 *
 	 */
 	protected void gameLoop() {
 		float elapsedTime;
@@ -120,7 +118,6 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Handle user input
-	 *
 	 */
 	protected void input() {
 		mouseInput.input(window);
@@ -129,7 +126,6 @@ public class GameEngine implements Runnable {
 
 	/**
 	 * Render the game to the window
-	 *
 	 */
 	protected void render() {
 		if (window.getWindowOptions().showFps && ((timer.getLastLoopTime() - lastFps) > 1)) {
@@ -160,7 +156,8 @@ public class GameEngine implements Runnable {
 	}
 
 	/**
-	 * Start the game engine Handles thread launching differently for macOS
+	 * Start the game engine
+	 * Handles thread launching differently for macOS
 	 */
 	public void start() {
 		final String osName = System.getProperty("os.name");

@@ -56,6 +56,13 @@ public class Window {
 
 	private final Matrix4f projectionMatrix;
 
+	/** Window Constructor
+	 * @param title	Window title
+	 * @param width	Window width in pixels
+	 * @param height	Window height in pixels
+	 * @param vSync	Sync to monitor refresh
+	 * @param opts	Additional options
+	 */
 	public Window(final String title, final int width, final int height, final boolean vSync,
 			final WindowOptions opts) {
 		this.title = title;
@@ -67,38 +74,65 @@ public class Window {
 		projectionMatrix = new Matrix4f();
 	}
 
+	/**
+	 * @return	Window height in pixels
+	 */
 	public int getHeight() {
 		return height;
 	}
 
+	/**
+	 * @return	Additional options
+	 */
 	public WindowOptions getOptions() {
 		return opts;
 	}
 
+	/**
+	 * @return	Projection matrix
+	 */
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
 
+	/**
+	 * @return	Title
+	 */
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 * @return	Window width in pixels
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * @return	Window handle
+	 */
 	public long getWindowHandle() {
 		return windowHandle;
 	}
 
+	/**
+	 * @return	Additional window options
+	 */
 	public WindowOptions getWindowOptions() {
 		return opts;
 	}
 
+	/**
+	 * @return	Window title
+	 */
 	public String getWindowTitle() {
 		return title;
 	}
 
+	/**	Initialize the window
+	 * 
+	 */
 	public void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
@@ -117,7 +151,7 @@ public class Window {
 		// after creation
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_TRUE); // the window
 																// will be
-																// resizable
+																// resizeable
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
 		if (opts.compatibleProfile) {
@@ -130,8 +164,7 @@ public class Window {
 		boolean maximized = false;
 		// If no size has been specified set it to maximized state
 		if ((width == 0) || (height == 0)) {
-			// Set up a fixed width and height so window initialization does not
-			// fail
+			// Set up a fixed width and height so window initialization does not fail
 			width = 100;
 			height = 100;
 			GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
@@ -208,44 +241,77 @@ public class Window {
 		}
 	}
 
+	/** Check if a key is pressed
+	 * @param keyCode	Key code to query
+	 * @return	Key status
+	 */
 	public boolean isKeyPressed(final int keyCode) {
 		return GLFW.glfwGetKey(windowHandle, keyCode) == GLFW.GLFW_PRESS;
 	}
 
+	/**
+	 * @return Window resized
+	 */
 	public boolean isResized() {
 		return resized;
 	}
 
+	/**
+	 * @return Vertical sync enabled
+	 */
 	public boolean isvSync() {
 		return vSync;
 	}
 
+	/** Set the clear colour in RGBA
+	 * @param r	Red channel
+	 * @param g	Green channel
+	 * @param b	Blue channel
+	 * @param alpha	Alpha channel
+	 */
 	public void setClearColor(final float r, final float g, final float b, final float alpha) {
 		GL11.glClearColor(r, g, b, alpha);
 	}
 
+	/**
+	 * @param resized Window resized
+	 */
 	public void setResized(final boolean resized) {
 		this.resized = resized;
 	}
 
+	/**
+	 * @param vSync Vertical Sync mode
+	 */
 	public void setvSync(final boolean vSync) {
 		this.vSync = vSync;
 	}
 
+	/**
+	 * @param title	Window title
+	 */
 	public void setWindowTitle(final String title) {
 		GLFW.glfwSetWindowTitle(windowHandle, title);
 	}
 
+	/** Update the window
+	 */
 	public void update() {
 		GLFW.glfwSwapBuffers(windowHandle);
 		GLFW.glfwPollEvents();
 	}
 
+	/** Update projection matrix
+	 * @return	Updated projection matrix
+	 */
 	public Matrix4f updateProjectionMatrix() {
 		final float aspectRatio = (float) width / (float) height;
 		return projectionMatrix.setPerspective(Window.FOV, aspectRatio, Window.Z_NEAR, Window.Z_FAR);
 	}
 
+	/** Check if a window should close
+	 * @return	Window should close
+	 */
 	public boolean windowShouldClose() {
 		return GLFW.glfwWindowShouldClose(windowHandle);
 	}

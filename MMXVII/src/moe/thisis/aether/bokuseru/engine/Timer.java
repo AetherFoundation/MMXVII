@@ -4,6 +4,9 @@ public class Timer {
 
 	private double lastLoopTime;
 
+	/**
+	 * @return	Elapsed time
+	 */
 	public float getElapsedTime() {
 		final double time = getTime();
 		final float elapsedTime = (float) (time - lastLoopTime);
@@ -11,6 +14,9 @@ public class Timer {
 		return elapsedTime;
 	}
 
+	/**
+	 * @return	Last loop time
+	 */
 	public double getLastLoopTime() {
 		return lastLoopTime;
 	}
@@ -22,6 +28,9 @@ public class Timer {
 		return System.nanoTime() / 1000_000_000.0;
 	}
 
+	/** Initialize timer
+	 * 
+	 */
 	public void init() {
 		lastLoopTime = getTime();
 	}

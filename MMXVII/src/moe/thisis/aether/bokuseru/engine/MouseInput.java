@@ -27,20 +27,32 @@ public class MouseInput {
 
 	private GLFWMouseButtonCallback mouseButtonCallback;
 
+	/**
+	 * Mouse Input Constructor
+	 */
 	public MouseInput() {
 		previousPos = new Vector2d(-1, -1);
 		currentPos = new Vector2d(0, 0);
 		displVec = new Vector2f();
 	}
 
+	/**
+	 * @return	Current mouse position
+	 */
 	public Vector2d getCurrentPos() {
 		return currentPos;
 	}
 
+	/**
+	 * @return	Current mouse displacement
+	 */
 	public Vector2f getDisplVec() {
 		return displVec;
 	}
 
+	/** Initialize mouse input
+	 * @param window	Window to monitor mouse input in
+	 */
 	public void init(final Window window) {
 		GLFW.glfwSetCursorPosCallback(window.getWindowHandle(), cursorPosCallback = new GLFWCursorPosCallback() {
 			@Override
@@ -64,6 +76,9 @@ public class MouseInput {
 		});
 	}
 
+	/** Handle mouse input
+	 * @param window	Window to handle mouse input for
+	 */
 	public void input(final Window window) {
 		displVec.x = 0;
 		displVec.y = 0;
@@ -83,10 +98,16 @@ public class MouseInput {
 		previousPos.y = currentPos.y;
 	}
 
+	/**
+	 * @return	Left mouse button state
+	 */
 	public boolean isLeftButtonPressed() {
 		return leftButtonPressed;
 	}
 
+	/**
+	 * @return	Right mouse button state
+	 */
 	public boolean isRightButtonPressed() {
 		return rightButtonPressed;
 	}

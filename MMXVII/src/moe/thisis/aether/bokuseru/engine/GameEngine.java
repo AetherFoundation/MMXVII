@@ -24,24 +24,24 @@ public class GameEngine implements Runnable {
     
     private String windowTitle;
     
-    /**
-     * @param windowTitle
-     * @param vSync
-     * @param opts
-     * @param gameLogic
+    /** Create an engine instance without specifying window size
+     * @param windowTitle	Title of the game window
+     * @param vSync			Enable vertical sync
+     * @param opts			Additional window options
+     * @param gameLogic		Game logic to use
      * @throws Exception
      */
     public GameEngine(String windowTitle, boolean vSync, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
         this(windowTitle, 0, 0, vSync, opts, gameLogic);
     }
 
-    /**
-     * @param windowTitle
-     * @param width
-     * @param height
-     * @param vSync
-     * @param opts
-     * @param gameLogic
+    /** Create an engine instance with a specific window size
+     * @param windowTitle	Title of the game window
+     * @param width			Window width
+     * @param height		Window height
+     * @param vSync			Enable vertical sync
+     * @param opts			Additional window options
+     * @param gameLogic		Game logic to use
      * @throws Exception
      */
     public GameEngine(String windowTitle, int width, int height, boolean vSync, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
@@ -53,8 +53,8 @@ public class GameEngine implements Runnable {
         timer = new Timer();
     }
 
-    /**
-     * 
+    /** Start the game engine
+     * Handles thread launching differently for macOS
      */
     public void start() {
         String osName = System.getProperty("os.name");
@@ -65,6 +65,9 @@ public class GameEngine implements Runnable {
         }
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run() {
         try {
@@ -77,6 +80,9 @@ public class GameEngine implements Runnable {
         }
     }
 
+    /** Initialize the game engine
+     * @throws Exception
+     */
     protected void init() throws Exception {
         window.init();
         timer.init();
@@ -86,6 +92,9 @@ public class GameEngine implements Runnable {
         fps = 0;
     }
 
+    /** Game engine execution loop
+     * 
+     */
     protected void gameLoop() {
         float elapsedTime;
         float accumulator = 0f;
@@ -96,14 +105,14 @@ public class GameEngine implements Runnable {
             elapsedTime = timer.getElapsedTime();
             accumulator += elapsedTime;
 
-            input();
+            input(); //handle user input
 
             while (accumulator >= interval) {
                 update(interval);
                 accumulator -= interval;
             }
 
-            render();
+            render(); //render the scene
 
             if ( !window.isvSync() ) {
                 sync();
@@ -111,10 +120,16 @@ public class GameEngine implements Runnable {
         }
     }
 
+    /** Clear the state of the game logic
+     * 
+     */
     protected void cleanup() {
         gameLogic.cleanup();
     }
     
+    /** Synchronize execution to the target framerate
+     * 
+     */
     private void sync() {
         float loopSlot = 1f / TARGET_FPS;
         double endTime = timer.getLastLoopTime() + loopSlot;
@@ -126,15 +141,24 @@ public class GameEngine implements Runnable {
         }
     }
 
+    /** Handle user input
+     * 
+     */
     protected void input() {
         mouseInput.input(window);
         gameLogic.input(window, mouseInput);
     }
 
+    /** Update the game logic
+     * @param interval	Update interval
+     */
     protected void update(float interval) {
         gameLogic.update(interval, mouseInput, window);
     }
 
+    /** Render the game to the window
+     * 
+     */
     protected void render() {
         if ( window.getWindowOptions().showFps && timer.getLastLoopTime() - lastFps > 1 ) {
             lastFps = timer.getLastLoopTime();

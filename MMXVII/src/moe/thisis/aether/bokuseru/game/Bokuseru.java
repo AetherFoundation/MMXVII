@@ -30,7 +30,7 @@ import moe.thisis.aether.bokuseru.engine.sound.SoundListener;
 import moe.thisis.aether.bokuseru.engine.sound.SoundManager;
 import moe.thisis.aether.bokuseru.engine.sound.SoundSource;
 
-public class DummyGame implements IGameLogic {
+public class Bokuseru implements IGameLogic {
 
     private static final float MOUSE_SENSITIVITY = 0.5f;
 
@@ -66,7 +66,7 @@ public class DummyGame implements IGameLogic {
 
     private GameItem[] gameItems;
 
-    public DummyGame() {
+    public Bokuseru() {
         renderer = new Renderer();
         hud = new Hud();
         soundMgr = new SoundManager();
@@ -236,19 +236,19 @@ public class DummyGame implements IGameLogic {
     public void input(Window window, MouseInput mouseInput) {
         cameraInc.set(0, 0, 0);
         if (window.isKeyPressed(GLFW_KEY_W)) {
-            cameraInc.z = -1;
+            cameraInc.z = -3;
         } else if (window.isKeyPressed(GLFW_KEY_S)) {
-            cameraInc.z = 1;
+            cameraInc.z = 3;
         }
         if (window.isKeyPressed(GLFW_KEY_A)) {
-            cameraInc.x = -1;
+            cameraInc.x = -3;
         } else if (window.isKeyPressed(GLFW_KEY_D)) {
-            cameraInc.x = 1;
+            cameraInc.x = 3;
         }
         if (window.isKeyPressed(GLFW_KEY_Z)) {
-            cameraInc.y = -1;
+            cameraInc.y = -3;
         } else if (window.isKeyPressed(GLFW_KEY_X)) {
-            cameraInc.y = 1;
+            cameraInc.y = 3;
         }
         if (window.isKeyPressed(GLFW_KEY_LEFT)) {
             angleInc -= 0.05f;

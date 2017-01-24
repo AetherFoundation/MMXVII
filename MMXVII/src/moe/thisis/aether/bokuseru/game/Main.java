@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             boolean vSync = true;
-            IGameLogic gameLogic = new DummyGame();
+            IGameLogic gameLogic = new Bokuseru();
             Window.WindowOptions opts = new Window.WindowOptions();
             opts.cullFace = true;
             opts.showFps = true;

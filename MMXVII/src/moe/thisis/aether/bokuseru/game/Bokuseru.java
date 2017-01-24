@@ -28,252 +28,254 @@ import moe.thisis.aether.bokuseru.engine.sound.SoundSource;
 
 public class Bokuseru implements IGameLogic {
 
-    private static final float MOUSE_SENSITIVITY = 0.5f;
+	private static final float MOUSE_SENSITIVITY = 0.5f;
 
-    private final Vector3f cameraInc;
+	private final Vector3f cameraInc;
 
-    private final Renderer renderer;
+	private final Renderer renderer;
 
-    private final SoundManager soundMgr;
+	private final SoundManager soundMgr;
 
-    private final Camera camera;
+	private final Camera camera;
 
-    private Scene scene;
+	private Scene scene;
 
-    private Hud hud;
+	private Hud hud;
 
-    private static final float CAMERA_POS_STEP = 0.10f;
+	private static final float CAMERA_POS_STEP = 0.10f;
 
-    private Terrain terrain;
+	private Terrain terrain;
 
-    private float angleInc;
+	private float angleInc;
 
-    private float lightAngle;
+	private float lightAngle;
 
-    private MouseBoxSelectionDetector selectDetector;
+	private MouseBoxSelectionDetector selectDetector;
 
-    private boolean leftButtonPressed;
-    
-    private enum Sounds {
-        MUSIC, BEEP
-    };
+	private boolean leftButtonPressed;
 
-    private GameItem[] gameItems;
+	private enum Sounds {
+		MUSIC, BEEP
+	};
 
-    public Bokuseru() {
-        renderer = new Renderer();
-        hud = new Hud();
-        soundMgr = new SoundManager();
-        camera = new Camera();
-        cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
-        angleInc = 0;
-        lightAngle = 45;
-    }
+	private GameItem[] gameItems;
 
-    @Override
-    public void init(Window window) throws Exception {
-        hud.init(window);
-        renderer.init(window);
-        soundMgr.init();
-        
-        leftButtonPressed = false;
+	public Bokuseru() {
+		renderer = new Renderer();
+		hud = new Hud();
+		soundMgr = new SoundManager();
+		camera = new Camera();
+		cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
+		angleInc = 0;
+		lightAngle = 45;
+	}
 
-        scene = new Scene();
+	@Override
+	public void init(Window window) throws Exception {
+		hud.init(window);
+		renderer.init(window);
+		soundMgr.init();
 
-        float reflectance = 0;
+		leftButtonPressed = false;
 
-        float blockScale = 0.5f;
-        float skyBoxScale = 100.0f;
-        float extension = 2.0f;
+		scene = new Scene();
 
-        float startx = extension * (-skyBoxScale + blockScale);
-        float startz = extension * (skyBoxScale - blockScale);
-        float starty = -1.0f;
-        float inc = blockScale * 2;
+		float reflectance = 0;
 
-        float posx = startx;
-        float posz = startz;
-        float incy = 0.0f;
+		float blockScale = 0.5f;
+		float skyBoxScale = 100.0f;
+		float extension = 2.0f;
 
-        selectDetector = new MouseBoxSelectionDetector();
+		float startx = extension * (-skyBoxScale + blockScale);
+		float startz = extension * (skyBoxScale - blockScale);
+		float starty = -1.0f;
+		float inc = blockScale * 2;
 
-        PNGDecoder decoder = new PNGDecoder(getClass().getResourceAsStream("/textures/heightmap.png"));
-        int height = decoder.getHeight();
-        int width = decoder.getWidth();
-        ByteBuffer buf = ByteBuffer.allocateDirect(4 * width * height);
-        decoder.decode(buf, width * 4, PNGDecoder.Format.RGBA);
-        buf.flip();
+		float posx = startx;
+		float posz = startz;
+		float incy = 0.0f;
 
-        int instances = height * width;
-        Mesh mesh = OBJLoader.loadMesh("/models/cube.obj", instances);
-        Texture texture = new Texture("/textures/terrain_textures_hd.png", 2, 1);
-        Material material = new Material(texture, reflectance);
-        mesh.setMaterial(material);
-        gameItems = new GameItem[instances];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                GameItem gameItem = new GameItem(mesh);
-                gameItem.setScale(blockScale);
-                int rgb = HeightMapMesh.getRGB(i, j, width, buf);
-                incy = rgb / (10 * 255 * 255);
-                gameItem.setPosition(posx, starty + incy, posz);
-                int textPos = Math.random() > 0.5f ? 0 : 1;
-                gameItem.setTextPos(textPos);
-                gameItems[i * width + j] = gameItem;
+		selectDetector = new MouseBoxSelectionDetector();
 
-                posx += inc;
-            }
-            posx = startx;
-            posz -= inc;
-        }
-        scene.setGameItems(gameItems);
-        
-        // Shadows
-        scene.setRenderShadows(false);
+		PNGDecoder decoder = new PNGDecoder(getClass().getResourceAsStream("/textures/heightmap.png"));
+		int height = decoder.getHeight();
+		int width = decoder.getWidth();
+		ByteBuffer buf = ByteBuffer.allocateDirect(4 * width * height);
+		decoder.decode(buf, width * 4, PNGDecoder.Format.RGBA);
+		buf.flip();
 
-        // Fog
-        //Vector3f fogColour = new Vector3f(0.5f, 0.5f, 0.5f);
-        //scene.setFog(new Fog(true, fogColour, 0.02f));
+		int instances = height * width;
+		Mesh mesh = OBJLoader.loadMesh("/models/cube.obj", instances);
+		Texture texture = new Texture("/textures/terrain_textures_hd.png", 2, 1);
+		Material material = new Material(texture, reflectance);
+		mesh.setMaterial(material);
+		gameItems = new GameItem[instances];
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				GameItem gameItem = new GameItem(mesh);
+				gameItem.setScale(blockScale);
+				int rgb = HeightMapMesh.getRGB(i, j, width, buf);
+				incy = rgb / (10 * 255 * 255);
+				gameItem.setPosition(posx, starty + incy, posz);
+				int textPos = Math.random() > 0.5f ? 0 : 1;
+				gameItem.setTextPos(textPos);
+				gameItems[i * width + j] = gameItem;
 
-        // Setup Lights
-        setupLights();
+				posx += inc;
+			}
+			posx = startx;
+			posz -= inc;
+		}
+		scene.setGameItems(gameItems);
 
-        camera.getPosition().x = 0.25f;
-        camera.getPosition().y = 6.5f;
-        camera.getPosition().z = 6.5f;
-        camera.getRotation().x = 25;
-        camera.getRotation().y = -1;
+		// Shadows
+		scene.setRenderShadows(false);
 
-        // Sounds
-        this.soundMgr.init();
-        this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
-        setupSounds();
-    }
+		// Fog
+		// Vector3f fogColour = new Vector3f(0.5f, 0.5f, 0.5f);
+		// scene.setFog(new Fog(true, fogColour, 0.02f));
 
-    private void setupSounds() throws Exception {
-        SoundBuffer buffBack = new SoundBuffer("/sounds/background.ogg");
-        soundMgr.addSoundBuffer(buffBack);
-        SoundSource sourceBack = new SoundSource(true, true);
-        sourceBack.setBuffer(buffBack.getBufferId());
-        soundMgr.addSoundSource(Sounds.MUSIC.toString(), sourceBack);
+		// Setup Lights
+		setupLights();
 
-        SoundBuffer buffBeep = new SoundBuffer("/sounds/beep.ogg");
-        soundMgr.addSoundBuffer(buffBeep);
-        SoundSource sourceBeep = new SoundSource(false, true);
-        sourceBeep.setBuffer(buffBeep.getBufferId());
-        soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
+		camera.getPosition().x = 0.25f;
+		camera.getPosition().y = 6.5f;
+		camera.getPosition().z = 6.5f;
+		camera.getRotation().x = 25;
+		camera.getRotation().y = -1;
 
-        soundMgr.setListener(new SoundListener(new Vector3f(0, 0, 0)));
+		// Sounds
+		this.soundMgr.init();
+		this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+		setupSounds();
+	}
 
-        sourceBack.play();
-    }
+	private void setupSounds() throws Exception {
+		SoundBuffer buffBack = new SoundBuffer("/sounds/background.ogg");
+		soundMgr.addSoundBuffer(buffBack);
+		SoundSource sourceBack = new SoundSource(true, true);
+		sourceBack.setBuffer(buffBack.getBufferId());
+		soundMgr.addSoundSource(Sounds.MUSIC.toString(), sourceBack);
 
-    private void setupLights() {
-        SceneLight sceneLight = new SceneLight();
-        scene.setSceneLight(sceneLight);
+		SoundBuffer buffBeep = new SoundBuffer("/sounds/beep.ogg");
+		soundMgr.addSoundBuffer(buffBeep);
+		SoundSource sourceBeep = new SoundSource(false, true);
+		sourceBeep.setBuffer(buffBeep.getBufferId());
+		soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
 
-        // Ambient Light
-        sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
-        sceneLight.setSkyBoxLight(new Vector3f(1.0f, 1.0f, 1.0f));
+		soundMgr.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
-        // Directional Light
-        float lightIntensity = 1.0f;
-        Vector3f lightDirection = new Vector3f(0, 1, 1);
-        DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), lightDirection, lightIntensity);
-        directionalLight.setShadowPosMult(10);
-        directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
-        sceneLight.setDirectionalLight(directionalLight);
-    }
+		sourceBack.play();
+	}
 
-    @Override
-    public void input(Window window, MouseInput mouseInput) {
-        cameraInc.set(0, 0, 0);
-        if (window.isKeyPressed(GLFW_KEY_W)) {
-            cameraInc.z = -3;
-        } else if (window.isKeyPressed(GLFW_KEY_S)) {
-            cameraInc.z = 3;
-        }
-        if (window.isKeyPressed(GLFW_KEY_A)) {
-            cameraInc.x = -3;
-        } else if (window.isKeyPressed(GLFW_KEY_D)) {
-            cameraInc.x = 3;
-        }
-        if (window.isKeyPressed(GLFW_KEY_Z)) {
-            cameraInc.y = -3;
-        } else if (window.isKeyPressed(GLFW_KEY_X)) {
-            cameraInc.y = 3;
-        }
-        if (window.isKeyPressed(GLFW_KEY_LEFT)) {
-            angleInc -= 0.05f;
-            soundMgr.playSoundSource(Sounds.BEEP.toString());
-        } else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
-            angleInc += 0.05f;
-            soundMgr.playSoundSource(Sounds.BEEP.toString());
-        } else {
-            angleInc = 0;
-        }
+	private void setupLights() {
+		SceneLight sceneLight = new SceneLight();
+		scene.setSceneLight(sceneLight);
 
-    }
+		// Ambient Light
+		sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
+		sceneLight.setSkyBoxLight(new Vector3f(1.0f, 1.0f, 1.0f));
 
-    @Override
-    public void update(float interval, MouseInput mouseInput, Window window) {
-        if (mouseInput.isRightButtonPressed()) {
-            // Update camera based on mouse            
-            Vector2f rotVec = mouseInput.getDisplVec();
-            camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-        }
+		// Directional Light
+		float lightIntensity = 1.0f;
+		Vector3f lightDirection = new Vector3f(0, 1, 1);
+		DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), lightDirection, lightIntensity);
+		directionalLight.setShadowPosMult(10);
+		directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
+		sceneLight.setDirectionalLight(directionalLight);
+	}
 
-        // Update camera position
-        Vector3f prevPos = new Vector3f(camera.getPosition());
-        camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
-        // Check if there has been a collision. If true, set the y position to
-        // the maximum height
-        float height = terrain != null ? terrain.getHeight(camera.getPosition()) : -Float.MAX_VALUE;
-        if (camera.getPosition().y <= height) {
-            camera.setPosition(prevPos.x, prevPos.y, prevPos.z);
-        }
+	@Override
+	public void input(Window window, MouseInput mouseInput) {
+		cameraInc.set(0, 0, 0);
+		if (window.isKeyPressed(GLFW_KEY_W)) {
+			cameraInc.z = -3;
+		} else if (window.isKeyPressed(GLFW_KEY_S)) {
+			cameraInc.z = 3;
+		}
+		if (window.isKeyPressed(GLFW_KEY_A)) {
+			cameraInc.x = -3;
+		} else if (window.isKeyPressed(GLFW_KEY_D)) {
+			cameraInc.x = 3;
+		}
+		if (window.isKeyPressed(GLFW_KEY_Z)) {
+			cameraInc.y = -3;
+		} else if (window.isKeyPressed(GLFW_KEY_X)) {
+			cameraInc.y = 3;
+		}
+		if (window.isKeyPressed(GLFW_KEY_LEFT)) {
+			angleInc -= 0.05f;
+			soundMgr.playSoundSource(Sounds.BEEP.toString());
+		} else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
+			angleInc += 0.05f;
+			soundMgr.playSoundSource(Sounds.BEEP.toString());
+		} else {
+			angleInc = 0;
+		}
 
-        lightAngle += angleInc;
-        if (lightAngle < 0) {
-            lightAngle = 0;
-        } else if (lightAngle > 180) {
-            lightAngle = 180;
-        }
-        float zValue = (float) Math.cos(Math.toRadians(lightAngle));
-        float yValue = (float) Math.sin(Math.toRadians(lightAngle));
-        Vector3f lightDirection = this.scene.getSceneLight().getDirectionalLight().getDirection();
-        lightDirection.x = 0;
-        lightDirection.y = yValue;
-        lightDirection.z = zValue;
-        lightDirection.normalize();
+	}
 
-        // Update view matrix
-        camera.updateViewMatrix();
+	@Override
+	public void update(float interval, MouseInput mouseInput, Window window) {
+		if (mouseInput.isRightButtonPressed()) {
+			// Update camera based on mouse
+			Vector2f rotVec = mouseInput.getDisplVec();
+			camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+		}
 
-        // Update sound listener position;
-        soundMgr.updateListenerPosition(camera);
+		// Update camera position
+		Vector3f prevPos = new Vector3f(camera.getPosition());
+		camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP,
+				cameraInc.z * CAMERA_POS_STEP);
+		// Check if there has been a collision. If true, set the y position to
+		// the maximum height
+		float height = terrain != null ? terrain.getHeight(camera.getPosition()) : -Float.MAX_VALUE;
+		if (camera.getPosition().y <= height) {
+			camera.setPosition(prevPos.x, prevPos.y, prevPos.z);
+		}
 
-        boolean aux = mouseInput.isLeftButtonPressed();        
-        if (aux && !this.leftButtonPressed && this.selectDetector.selectGameItem(gameItems, window, mouseInput.getCurrentPos(), camera)) {
-            this.hud.incCounter();
-        }
-        this.leftButtonPressed = aux;
-    }
+		lightAngle += angleInc;
+		if (lightAngle < 0) {
+			lightAngle = 0;
+		} else if (lightAngle > 180) {
+			lightAngle = 180;
+		}
+		float zValue = (float) Math.cos(Math.toRadians(lightAngle));
+		float yValue = (float) Math.sin(Math.toRadians(lightAngle));
+		Vector3f lightDirection = this.scene.getSceneLight().getDirectionalLight().getDirection();
+		lightDirection.x = 0;
+		lightDirection.y = yValue;
+		lightDirection.z = zValue;
+		lightDirection.normalize();
 
-    @Override
-    public void render(Window window) {
-        renderer.render(window, camera, scene);
-        hud.render(window);
-    }
+		// Update view matrix
+		camera.updateViewMatrix();
 
-    @Override
-    public void cleanup() {
-        renderer.cleanup();
-        soundMgr.cleanup();
+		// Update sound listener position;
+		soundMgr.updateListenerPosition(camera);
 
-        scene.cleanup();
-        if (hud != null) {
-            hud.cleanup();
-        }
-    }
+		boolean aux = mouseInput.isLeftButtonPressed();
+		if (aux && !this.leftButtonPressed
+				&& this.selectDetector.selectGameItem(gameItems, window, mouseInput.getCurrentPos(), camera)) {
+			this.hud.incCounter();
+		}
+		this.leftButtonPressed = aux;
+	}
+
+	@Override
+	public void render(Window window) {
+		renderer.render(window, camera, scene);
+		hud.render(window);
+	}
+
+	@Override
+	public void cleanup() {
+		renderer.cleanup();
+		soundMgr.cleanup();
+
+		scene.cleanup();
+		if (hud != null) {
+			hud.cleanup();
+		}
+	}
 }

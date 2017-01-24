@@ -4,65 +4,68 @@ import org.joml.Vector3f;
 
 public class Fog {
 
-    private boolean active;
+	private boolean active;
 
-    private Vector3f colour;
+	private Vector3f colour;
 
-    private float density;
+	private float density;
 
-    public static Fog NOFOG = new Fog();
-    
-    public Fog() {
-        active = false;
-        this.colour = new Vector3f(0, 0, 0);
-        this.density = 0;
-    }
+	public static Fog NOFOG = new Fog();
 
-    public Fog(boolean active, Vector3f colour, float density) {
-        this.colour = colour;
-        this.density = density;
-        this.active = active;
-    }
+	public Fog() {
+		active = false;
+		this.colour = new Vector3f(0, 0, 0);
+		this.density = 0;
+	}
 
-    /**
-     * @return the state
-     */
-    public boolean isActive() {
-        return active;
-    }
+	public Fog(boolean active, Vector3f colour, float density) {
+		this.colour = colour;
+		this.density = density;
+		this.active = active;
+	}
 
-    /**
-     * @param active state to set
-     */
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+	/**
+	 * @return the state
+	 */
+	public boolean isActive() {
+		return active;
+	}
 
-    /**
-     * @return the colour
-     */
-    public Vector3f getColour() {
-        return colour;
-    }
+	/**
+	 * @param active
+	 *            state to set
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
-    /**
-     * @param colour the colour to set
-     */
-    public void setColour(Vector3f colour) {
-        this.colour = colour;
-    }
+	/**
+	 * @return the colour
+	 */
+	public Vector3f getColour() {
+		return colour;
+	}
 
-    /**
-     * @return the density
-     */
-    public float getDensity() {
-        return density;
-    }
+	/**
+	 * @param colour
+	 *            the colour to set
+	 */
+	public void setColour(Vector3f colour) {
+		this.colour = colour;
+	}
 
-    /**
-     * @param density the density to set
-     */
-    public void setDensity(float density) {
-        this.density = density;
-    }
+	/**
+	 * @return the density
+	 */
+	public float getDensity() {
+		return density;
+	}
+
+	/**
+	 * @param density
+	 *            the density to set
+	 */
+	public void setDensity(float density) {
+		this.density = density;
+	}
 }

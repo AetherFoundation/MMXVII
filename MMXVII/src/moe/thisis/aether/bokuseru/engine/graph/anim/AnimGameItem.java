@@ -7,49 +7,49 @@ import moe.thisis.aether.bokuseru.engine.items.GameItem;
 
 public class AnimGameItem extends GameItem {
 
-    private int currentFrame;
-    
-    private List<AnimatedFrame> frames;
+	private int currentFrame;
 
-    private List<Matrix4f> invJointMatrices;
-    
-    public AnimGameItem(Mesh[] meshes, List<AnimatedFrame> frames, List<Matrix4f> invJointMatrices) {
-        super(meshes);
-        this.frames = frames;
-        this.invJointMatrices = invJointMatrices;
-        currentFrame = 0;
-    }
+	private List<AnimatedFrame> frames;
 
-    public List<AnimatedFrame> getFrames() {
-        return frames;
-    }
+	private List<Matrix4f> invJointMatrices;
 
-    public void setFrames(List<AnimatedFrame> frames) {
-        this.frames = frames;
-    }
-    
-    public AnimatedFrame getCurrentFrame() {
-        return this.frames.get(currentFrame);
-    }
-    
-    public AnimatedFrame getNextFrame() {
-        int nextFrame = currentFrame + 1;    
-        if ( nextFrame > frames.size() - 1) {
-            nextFrame = 0;
-        }
-        return this.frames.get(nextFrame);
-    }
+	public AnimGameItem(Mesh[] meshes, List<AnimatedFrame> frames, List<Matrix4f> invJointMatrices) {
+		super(meshes);
+		this.frames = frames;
+		this.invJointMatrices = invJointMatrices;
+		currentFrame = 0;
+	}
 
-    public void nextFrame() {
-        int nextFrame = currentFrame + 1;    
-        if ( nextFrame > frames.size() - 1) {
-            currentFrame = 0;
-        } else {
-            currentFrame = nextFrame;
-        }
-    }    
+	public List<AnimatedFrame> getFrames() {
+		return frames;
+	}
 
-    public List<Matrix4f> getInvJointMatrices() {
-        return invJointMatrices;
-    }
+	public void setFrames(List<AnimatedFrame> frames) {
+		this.frames = frames;
+	}
+
+	public AnimatedFrame getCurrentFrame() {
+		return this.frames.get(currentFrame);
+	}
+
+	public AnimatedFrame getNextFrame() {
+		int nextFrame = currentFrame + 1;
+		if (nextFrame > frames.size() - 1) {
+			nextFrame = 0;
+		}
+		return this.frames.get(nextFrame);
+	}
+
+	public void nextFrame() {
+		int nextFrame = currentFrame + 1;
+		if (nextFrame > frames.size() - 1) {
+			currentFrame = 0;
+		} else {
+			currentFrame = nextFrame;
+		}
+	}
+
+	public List<Matrix4f> getInvJointMatrices() {
+		return invJointMatrices;
+	}
 }

@@ -7,54 +7,54 @@ import moe.thisis.aether.bokuseru.engine.graph.lights.SpotLight;
 
 public class SceneLight {
 
-    private Vector3f ambientLight;
-    
-    private Vector3f skyBoxLight;
+	private Vector3f ambientLight;
 
-    private PointLight[] pointLightList;
-    
-    private SpotLight[] spotLightList;
-    
-    private DirectionalLight directionalLight;
+	private Vector3f skyBoxLight;
 
-    public Vector3f getAmbientLight() {
-        return ambientLight;
-    }
+	private PointLight[] pointLightList;
 
-    public void setAmbientLight(Vector3f ambientLight) {
-        this.ambientLight = ambientLight;
-    }
+	private SpotLight[] spotLightList;
 
-    public PointLight[] getPointLightList() {
-        return pointLightList;
-    }
+	private DirectionalLight directionalLight;
 
-    public void setPointLightList(PointLight[] pointLightList) {
-        this.pointLightList = pointLightList;
-    }
+	public Vector3f getAmbientLight() {
+		return ambientLight;
+	}
 
-    public SpotLight[] getSpotLightList() {
-        return spotLightList;
-    }
+	public void setAmbientLight(Vector3f ambientLight) {
+		this.ambientLight = ambientLight;
+	}
 
-    public void setSpotLightList(SpotLight[] spotLightList) {
-        this.spotLightList = spotLightList;
-    }
+	public PointLight[] getPointLightList() {
+		return pointLightList;
+	}
 
-    public DirectionalLight getDirectionalLight() {
-        return directionalLight;
-    }
+	public void setPointLightList(PointLight[] pointLightList) {
+		this.pointLightList = pointLightList;
+	}
 
-    public void setDirectionalLight(DirectionalLight directionalLight) {
-        this.directionalLight = directionalLight;
-    }
+	public SpotLight[] getSpotLightList() {
+		return spotLightList;
+	}
 
-    public Vector3f getSkyBoxLight() {
-        return skyBoxLight;
-    }
+	public void setSpotLightList(SpotLight[] spotLightList) {
+		this.spotLightList = spotLightList;
+	}
 
-    public void setSkyBoxLight(Vector3f skyBoxLight) {
-        this.skyBoxLight = skyBoxLight;
-    }
-    
+	public DirectionalLight getDirectionalLight() {
+		return directionalLight;
+	}
+
+	public void setDirectionalLight(DirectionalLight directionalLight) {
+		this.directionalLight = directionalLight;
+	}
+
+	public Vector3f getSkyBoxLight() {
+		return skyBoxLight;
+	}
+
+	public void setSkyBoxLight(Vector3f skyBoxLight) {
+		this.skyBoxLight = skyBoxLight;
+	}
+
 }

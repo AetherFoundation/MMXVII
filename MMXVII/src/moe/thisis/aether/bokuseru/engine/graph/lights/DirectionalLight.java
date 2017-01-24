@@ -3,87 +3,87 @@ package moe.thisis.aether.bokuseru.engine.graph.lights;
 import org.joml.Vector3f;
 
 public class DirectionalLight {
-    
-    private Vector3f color;
 
-    private Vector3f direction;
+	private Vector3f color;
 
-    private float intensity;
+	private Vector3f direction;
 
-    private OrthoCoords orthoCords;
-    
-    private float shadowPosMult;
-    
-    public DirectionalLight(Vector3f color, Vector3f direction, float intensity) {
-        this.orthoCords = new OrthoCoords();
-        this.shadowPosMult = 1;
-        this.color = color;
-        this.direction = direction;
-        this.intensity = intensity;
-        shadowPosMult = 1;
-    }
+	private float intensity;
 
-    public DirectionalLight(DirectionalLight light) {
-        this(new Vector3f(light.getColor()), new Vector3f(light.getDirection()), light.getIntensity());
-    }
+	private OrthoCoords orthoCords;
 
-    public float getShadowPosMult() {
-        return shadowPosMult;
-    }
-    
-    public void setShadowPosMult(float shadowPosMult) {
-        this.shadowPosMult = shadowPosMult;
-    }
-    
-    public OrthoCoords getOrthoCoords(){
-        return orthoCords;
-    }
-    
-    public void setOrthoCords(float left, float right, float bottom, float top, float near, float far) {
-        orthoCords.left = left;
-        orthoCords.right = right;
-        orthoCords.bottom = bottom;
-        orthoCords.top = top;
-        orthoCords.near = near;
-        orthoCords.far = far;
-    }
-    
-    public Vector3f getColor() {
-        return color;
-    }
+	private float shadowPosMult;
 
-    public void setColor(Vector3f color) {
-        this.color = color;
-    }
+	public DirectionalLight(Vector3f color, Vector3f direction, float intensity) {
+		this.orthoCords = new OrthoCoords();
+		this.shadowPosMult = 1;
+		this.color = color;
+		this.direction = direction;
+		this.intensity = intensity;
+		shadowPosMult = 1;
+	}
 
-    public Vector3f getDirection() {
-        return direction;
-    }
+	public DirectionalLight(DirectionalLight light) {
+		this(new Vector3f(light.getColor()), new Vector3f(light.getDirection()), light.getIntensity());
+	}
 
-    public void setDirection(Vector3f direction) {
-        this.direction = direction;
-    }
+	public float getShadowPosMult() {
+		return shadowPosMult;
+	}
 
-    public float getIntensity() {
-        return intensity;
-    }
+	public void setShadowPosMult(float shadowPosMult) {
+		this.shadowPosMult = shadowPosMult;
+	}
 
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
-    
-    public static class OrthoCoords {
-        
-        public float left;
-        
-        public float right;
-        
-        public float bottom;
-        
-        public float top;
+	public OrthoCoords getOrthoCoords() {
+		return orthoCords;
+	}
 
-        public float near;
-        
-        public float far;
-    }
+	public void setOrthoCords(float left, float right, float bottom, float top, float near, float far) {
+		orthoCords.left = left;
+		orthoCords.right = right;
+		orthoCords.bottom = bottom;
+		orthoCords.top = top;
+		orthoCords.near = near;
+		orthoCords.far = far;
+	}
+
+	public Vector3f getColor() {
+		return color;
+	}
+
+	public void setColor(Vector3f color) {
+		this.color = color;
+	}
+
+	public Vector3f getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Vector3f direction) {
+		this.direction = direction;
+	}
+
+	public float getIntensity() {
+		return intensity;
+	}
+
+	public void setIntensity(float intensity) {
+		this.intensity = intensity;
+	}
+
+	public static class OrthoCoords {
+
+		public float left;
+
+		public float right;
+
+		public float bottom;
+
+		public float top;
+
+		public float near;
+
+		public float far;
+	}
 }

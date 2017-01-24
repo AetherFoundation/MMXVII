@@ -13,115 +13,116 @@ import moe.thisis.aether.bokuseru.engine.graph.weather.Fog;
 
 public class Scene {
 
-    private final Map<Mesh, List<GameItem>> meshMap;
+	private final Map<Mesh, List<GameItem>> meshMap;
 
-    private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
+	private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
 
-    private SkyBox skyBox;
+	private SkyBox skyBox;
 
-    private SceneLight sceneLight;
+	private SceneLight sceneLight;
 
-    private Fog fog;
+	private Fog fog;
 
-    private boolean renderShadows;
-    
-    private IParticleEmitter[] particleEmitters;
+	private boolean renderShadows;
 
-    public Scene() {
-        meshMap = new HashMap();
-        instancedMeshMap = new HashMap();
-        fog = Fog.NOFOG;
-        renderShadows = true;
-    }
+	private IParticleEmitter[] particleEmitters;
 
-    public Map<Mesh, List<GameItem>> getGameMeshes() {
-        return meshMap;
-    }
+	public Scene() {
+		meshMap = new HashMap();
+		instancedMeshMap = new HashMap();
+		fog = Fog.NOFOG;
+		renderShadows = true;
+	}
 
-    public Map<InstancedMesh, List<GameItem>> getGameInstancedMeshes() {
-        return instancedMeshMap;
-    }
+	public Map<Mesh, List<GameItem>> getGameMeshes() {
+		return meshMap;
+	}
 
-    public boolean isRenderShadows() {
-        return renderShadows;
-    }
+	public Map<InstancedMesh, List<GameItem>> getGameInstancedMeshes() {
+		return instancedMeshMap;
+	}
 
-    public void setGameItems(GameItem[] gameItems) {
-        // Create a map of meshes to speed up rendering
-        int numGameItems = gameItems != null ? gameItems.length : 0;
-        for (int i = 0; i < numGameItems; i++) {
-            GameItem gameItem = gameItems[i];
-            Mesh[] meshes = gameItem.getMeshes();
-            for (Mesh mesh : meshes) {
-                boolean instancedMesh = mesh instanceof InstancedMesh;
-                List<GameItem> list = instancedMesh ? instancedMeshMap.get(mesh) : meshMap.get(mesh);
-                if (list == null) {
-                    list = new ArrayList<>();
-                    if (instancedMesh) {
-                        instancedMeshMap.put((InstancedMesh)mesh, list);
-                    } else {
-                        meshMap.put(mesh, list);
-                    }
-                }
-                list.add(gameItem);
-            }
-        }
-    }
+	public boolean isRenderShadows() {
+		return renderShadows;
+	}
 
-    public void cleanup() {
-        for (Mesh mesh : meshMap.keySet()) {
-            mesh.cleanUp();
-        }
-        for (Mesh mesh : instancedMeshMap.keySet()) {
-            mesh.cleanUp();
-        }
-        if (particleEmitters != null) {
-            for (IParticleEmitter particleEmitter : particleEmitters) {
-                particleEmitter.cleanup();
-            }
-        }
-    }
+	public void setGameItems(GameItem[] gameItems) {
+		// Create a map of meshes to speed up rendering
+		int numGameItems = gameItems != null ? gameItems.length : 0;
+		for (int i = 0; i < numGameItems; i++) {
+			GameItem gameItem = gameItems[i];
+			Mesh[] meshes = gameItem.getMeshes();
+			for (Mesh mesh : meshes) {
+				boolean instancedMesh = mesh instanceof InstancedMesh;
+				List<GameItem> list = instancedMesh ? instancedMeshMap.get(mesh) : meshMap.get(mesh);
+				if (list == null) {
+					list = new ArrayList<>();
+					if (instancedMesh) {
+						instancedMeshMap.put((InstancedMesh) mesh, list);
+					} else {
+						meshMap.put(mesh, list);
+					}
+				}
+				list.add(gameItem);
+			}
+		}
+	}
 
-    public SkyBox getSkyBox() {
-        return skyBox;
-    }
+	public void cleanup() {
+		for (Mesh mesh : meshMap.keySet()) {
+			mesh.cleanUp();
+		}
+		for (Mesh mesh : instancedMeshMap.keySet()) {
+			mesh.cleanUp();
+		}
+		if (particleEmitters != null) {
+			for (IParticleEmitter particleEmitter : particleEmitters) {
+				particleEmitter.cleanup();
+			}
+		}
+	}
 
-    public void setRenderShadows(boolean renderShadows) {
-        this.renderShadows = renderShadows;
-    }
+	public SkyBox getSkyBox() {
+		return skyBox;
+	}
 
-    public void setSkyBox(SkyBox skyBox) {
-        this.skyBox = skyBox;
-    }
+	public void setRenderShadows(boolean renderShadows) {
+		this.renderShadows = renderShadows;
+	}
 
-    public SceneLight getSceneLight() {
-        return sceneLight;
-    }
+	public void setSkyBox(SkyBox skyBox) {
+		this.skyBox = skyBox;
+	}
 
-    public void setSceneLight(SceneLight sceneLight) {
-        this.sceneLight = sceneLight;
-    }
+	public SceneLight getSceneLight() {
+		return sceneLight;
+	}
 
-    /**
-     * @return the fog
-     */
-    public Fog getFog() {
-        return fog;
-    }
+	public void setSceneLight(SceneLight sceneLight) {
+		this.sceneLight = sceneLight;
+	}
 
-    /**
-     * @param fog the fog to set
-     */
-    public void setFog(Fog fog) {
-        this.fog = fog;
-    }
+	/**
+	 * @return the fog
+	 */
+	public Fog getFog() {
+		return fog;
+	}
 
-    public IParticleEmitter[] getParticleEmitters() {
-        return particleEmitters;
-    }
+	/**
+	 * @param fog
+	 *            the fog to set
+	 */
+	public void setFog(Fog fog) {
+		this.fog = fog;
+	}
 
-    public void setParticleEmitters(IParticleEmitter[] particleEmitters) {
-        this.particleEmitters = particleEmitters;
-    }
+	public IParticleEmitter[] getParticleEmitters() {
+		return particleEmitters;
+	}
+
+	public void setParticleEmitters(IParticleEmitter[] particleEmitters) {
+		this.particleEmitters = particleEmitters;
+	}
 
 }

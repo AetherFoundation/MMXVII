@@ -39,6 +39,14 @@ public class MouseInput {
 		displVec = new Vector2f();
 	}
 
+	public Vector2d getCurrentPos() {
+		return currentPos;
+	}
+
+	public Vector2f getDisplVec() {
+		return displVec;
+	}
+
 	public void init(Window window) {
 		glfwSetCursorPosCallback(window.getWindowHandle(), cursorPosCallback = new GLFWCursorPosCallback() {
 			@Override
@@ -60,14 +68,6 @@ public class MouseInput {
 				rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
 			}
 		});
-	}
-
-	public Vector2f getDisplVec() {
-		return displVec;
-	}
-
-	public Vector2d getCurrentPos() {
-		return currentPos;
 	}
 
 	public void input(Window window) {

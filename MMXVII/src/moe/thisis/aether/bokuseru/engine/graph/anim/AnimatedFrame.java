@@ -22,12 +22,12 @@ public class AnimatedFrame {
 		Arrays.fill(jointMatrices, IDENTITY_MATRIX);
 	}
 
-	public Matrix4f[] getLocalJointMatrices() {
-		return localJointMatrices;
-	}
-
 	public Matrix4f[] getJointMatrices() {
 		return jointMatrices;
+	}
+
+	public Matrix4f[] getLocalJointMatrices() {
+		return localJointMatrices;
 	}
 
 	public void setMatrix(int pos, Matrix4f localJointMatrix, Matrix4f invJointMatrix) {

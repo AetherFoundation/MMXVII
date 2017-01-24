@@ -36,29 +36,9 @@ public class SoundSource {
 		}
 	}
 
-	public void setBuffer(int bufferId) {
+	public void cleanup() {
 		stop();
-		alSourcei(sourceId, AL_BUFFER, bufferId);
-	}
-
-	public void setPosition(Vector3f position) {
-		alSource3f(sourceId, AL_POSITION, position.x, position.y, position.z);
-	}
-
-	public void setSpeed(Vector3f speed) {
-		alSource3f(sourceId, AL_VELOCITY, speed.x, speed.y, speed.z);
-	}
-
-	public void setGain(float gain) {
-		alSourcef(sourceId, AL_GAIN, gain);
-	}
-
-	public void setProperty(int param, float value) {
-		alSourcef(sourceId, param, value);
-	}
-
-	public void play() {
-		alSourcePlay(sourceId);
+		alDeleteSources(sourceId);
 	}
 
 	public boolean isPlaying() {
@@ -69,12 +49,32 @@ public class SoundSource {
 		alSourcePause(sourceId);
 	}
 
-	public void stop() {
-		alSourceStop(sourceId);
+	public void play() {
+		alSourcePlay(sourceId);
 	}
 
-	public void cleanup() {
+	public void setBuffer(int bufferId) {
 		stop();
-		alDeleteSources(sourceId);
+		alSourcei(sourceId, AL_BUFFER, bufferId);
+	}
+
+	public void setGain(float gain) {
+		alSourcef(sourceId, AL_GAIN, gain);
+	}
+
+	public void setPosition(Vector3f position) {
+		alSource3f(sourceId, AL_POSITION, position.x, position.y, position.z);
+	}
+
+	public void setProperty(int param, float value) {
+		alSourcef(sourceId, param, value);
+	}
+
+	public void setSpeed(Vector3f speed) {
+		alSource3f(sourceId, AL_VELOCITY, speed.x, speed.y, speed.z);
+	}
+
+	public void stop() {
+		alSourceStop(sourceId);
 	}
 }

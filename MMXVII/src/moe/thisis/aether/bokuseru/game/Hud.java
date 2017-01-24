@@ -58,6 +58,17 @@ public class Hud {
 
 	private int counter;
 
+	public void cleanup() {
+		nvgDelete(vg);
+	}
+
+	public void incCounter() {
+		counter++;
+		if (counter > 99) {
+			counter = 0;
+		}
+	}
+
 	public void init(Window window) throws Exception {
 		this.vg = window.getOptions().antialiasing ? nvgCreate(NVG_ANTIALIAS | NVG_STENCIL_STROKES)
 				: nvgCreate(NVG_STENCIL_STROKES);
@@ -134,13 +145,6 @@ public class Hud {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	public void incCounter() {
-		counter++;
-		if (counter > 99) {
-			counter = 0;
-		}
-	}
-
 	private NVGColor rgba(int r, int g, int b, int a, NVGColor colour) {
 		colour.r(r / 255.0f);
 		colour.g(g / 255.0f);
@@ -148,9 +152,5 @@ public class Hud {
 		colour.a(a / 255.0f);
 
 		return colour;
-	}
-
-	public void cleanup() {
-		nvgDelete(vg);
 	}
 }

@@ -38,6 +38,18 @@ public class Mesh {
 
 	public static final int MAX_WEIGHTS = 4;
 
+	protected static float[] createEmptyFloatArray(int length, float defaultValue) {
+		float[] result = new float[length];
+		Arrays.fill(result, defaultValue);
+		return result;
+	}
+
+	protected static int[] createEmptyIntArray(int length, int defaultValue) {
+		int[] result = new int[length];
+		Arrays.fill(result, defaultValue);
+		return result;
+	}
+
 	protected final int vaoId;
 
 	protected final List<Integer> vboIdList;
@@ -116,12 +128,54 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 
-	public Material getMaterial() {
-		return material;
+	public void cleanUp() {
+		glDisableVertexAttribArray(0);
+
+		// Delete the VBOs
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		for (int vboId : vboIdList) {
+			glDeleteBuffers(vboId);
+		}
+
+		// Delete the texture
+		Texture texture = material.getTexture();
+		if (texture != null) {
+			texture.cleanup();
+		}
+
+		// Delete the VAO
+		glBindVertexArray(0);
+		glDeleteVertexArrays(vaoId);
 	}
 
-	public void setMaterial(Material material) {
-		this.material = material;
+	public void deleteBuffers() {
+		glDisableVertexAttribArray(0);
+
+		// Delete the VBOs
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		for (int vboId : vboIdList) {
+			glDeleteBuffers(vboId);
+		}
+
+		// Delete the VAO
+		glBindVertexArray(0);
+		glDeleteVertexArrays(vaoId);
+	}
+
+	protected void endRender() {
+		// Restore state
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
+		glDisableVertexAttribArray(4);
+		glBindVertexArray(0);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	public Material getMaterial() {
+		return material;
 	}
 
 	public final int getVaoId() {
@@ -157,18 +211,6 @@ public class Mesh {
 		glEnableVertexAttribArray(4);
 	}
 
-	protected void endRender() {
-		// Restore state
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(3);
-		glDisableVertexAttribArray(4);
-		glBindVertexArray(0);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
 	public void render() {
 		initRender();
 
@@ -190,49 +232,7 @@ public class Mesh {
 		endRender();
 	}
 
-	public void cleanUp() {
-		glDisableVertexAttribArray(0);
-
-		// Delete the VBOs
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		for (int vboId : vboIdList) {
-			glDeleteBuffers(vboId);
-		}
-
-		// Delete the texture
-		Texture texture = material.getTexture();
-		if (texture != null) {
-			texture.cleanup();
-		}
-
-		// Delete the VAO
-		glBindVertexArray(0);
-		glDeleteVertexArrays(vaoId);
-	}
-
-	public void deleteBuffers() {
-		glDisableVertexAttribArray(0);
-
-		// Delete the VBOs
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		for (int vboId : vboIdList) {
-			glDeleteBuffers(vboId);
-		}
-
-		// Delete the VAO
-		glBindVertexArray(0);
-		glDeleteVertexArrays(vaoId);
-	}
-
-	protected static float[] createEmptyFloatArray(int length, float defaultValue) {
-		float[] result = new float[length];
-		Arrays.fill(result, defaultValue);
-		return result;
-	}
-
-	protected static int[] createEmptyIntArray(int length, int defaultValue) {
-		int[] result = new int[length];
-		Arrays.fill(result, defaultValue);
-		return result;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 }

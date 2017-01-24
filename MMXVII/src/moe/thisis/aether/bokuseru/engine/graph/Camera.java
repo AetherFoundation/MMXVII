@@ -26,18 +26,12 @@ public class Camera {
 		return position;
 	}
 
-	public void setPosition(float x, float y, float z) {
-		position.x = x;
-		position.y = y;
-		position.z = z;
+	public Vector3f getRotation() {
+		return rotation;
 	}
 
 	public Matrix4f getViewMatrix() {
 		return viewMatrix;
-	}
-
-	public Matrix4f updateViewMatrix() {
-		return Transformation.updateGenericViewMatrix(position, rotation, viewMatrix);
 	}
 
 	public void movePosition(float offsetX, float offsetY, float offsetZ) {
@@ -52,8 +46,16 @@ public class Camera {
 		position.y += offsetY;
 	}
 
-	public Vector3f getRotation() {
-		return rotation;
+	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
+		rotation.x += offsetX;
+		rotation.y += offsetY;
+		rotation.z += offsetZ;
+	}
+
+	public void setPosition(float x, float y, float z) {
+		position.x = x;
+		position.y = y;
+		position.z = z;
 	}
 
 	public void setRotation(float x, float y, float z) {
@@ -62,9 +64,7 @@ public class Camera {
 		rotation.z = z;
 	}
 
-	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
-		rotation.x += offsetX;
-		rotation.y += offsetY;
-		rotation.z += offsetZ;
+	public Matrix4f updateViewMatrix() {
+		return Transformation.updateGenericViewMatrix(position, rotation, viewMatrix);
 	}
 }

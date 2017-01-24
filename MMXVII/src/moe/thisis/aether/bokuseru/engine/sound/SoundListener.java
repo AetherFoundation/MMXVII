@@ -19,14 +19,6 @@ public class SoundListener {
 		alListener3f(AL_VELOCITY, 0, 0, 0);
 	}
 
-	public void setSpeed(Vector3f speed) {
-		alListener3f(AL_VELOCITY, speed.x, speed.y, speed.z);
-	}
-
-	public void setPosition(Vector3f position) {
-		alListener3f(AL_POSITION, position.x, position.y, position.z);
-	}
-
 	public void setOrientation(Vector3f at, Vector3f up) {
 		float[] data = new float[6];
 		data[0] = at.x;
@@ -36,5 +28,13 @@ public class SoundListener {
 		data[4] = up.y;
 		data[5] = up.z;
 		alListenerfv(AL_ORIENTATION, data);
+	}
+
+	public void setPosition(Vector3f position) {
+		alListener3f(AL_POSITION, position.x, position.y, position.z);
+	}
+
+	public void setSpeed(Vector3f speed) {
+		alListener3f(AL_VELOCITY, speed.x, speed.y, speed.z);
 	}
 }

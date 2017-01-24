@@ -12,12 +12,12 @@ public class UniformData {
 		this.uniformLocation = uniformLocation;
 	}
 
-	public int getUniformLocation() {
-		return uniformLocation;
-	}
-
 	public FloatBuffer getFloatBuffer() {
 		return floatBuffer;
+	}
+
+	public int getUniformLocation() {
+		return uniformLocation;
 	}
 
 	public void setFloatBuffer(FloatBuffer floatBuffer) {

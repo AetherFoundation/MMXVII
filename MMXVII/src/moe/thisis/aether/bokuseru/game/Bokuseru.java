@@ -38,7 +38,13 @@ import moe.thisis.aether.bokuseru.engine.sound.SoundSource;
 
 public class Bokuseru implements IGameLogic {
 
+	private enum Sounds {
+		MUSIC, BEEP
+	}
+
 	private static final float MOUSE_SENSITIVITY = 0.5f;
+
+	private static final float CAMERA_POS_STEP = 0.10f;
 
 	private final Vector3f cameraInc;
 
@@ -52,8 +58,6 @@ public class Bokuseru implements IGameLogic {
 
 	private Hud hud;
 
-	private static final float CAMERA_POS_STEP = 0.10f;
-
 	private Terrain terrain;
 
 	private float angleInc;
@@ -62,11 +66,7 @@ public class Bokuseru implements IGameLogic {
 
 	private MouseBoxSelectionDetector selectDetector;
 
-	private boolean leftButtonPressed;
-
-	private enum Sounds {
-		MUSIC, BEEP
-	};
+	private boolean leftButtonPressed;;
 
 	private GameItem[] gameItems;
 
@@ -78,6 +78,17 @@ public class Bokuseru implements IGameLogic {
 		cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
 		angleInc = 0;
 		lightAngle = 45;
+	}
+
+	@Override
+	public void cleanup() {
+		renderer.cleanup();
+		soundMgr.cleanup();
+
+		scene.cleanup();
+		if (hud != null) {
+			hud.cleanup();
+		}
 	}
 
 	@Override
@@ -160,41 +171,6 @@ public class Bokuseru implements IGameLogic {
 		setupSounds();
 	}
 
-	private void setupSounds() throws Exception {
-		SoundBuffer buffBack = new SoundBuffer("/sounds/background.ogg");
-		soundMgr.addSoundBuffer(buffBack);
-		SoundSource sourceBack = new SoundSource(true, true);
-		sourceBack.setBuffer(buffBack.getBufferId());
-		soundMgr.addSoundSource(Sounds.MUSIC.toString(), sourceBack);
-
-		SoundBuffer buffBeep = new SoundBuffer("/sounds/beep.ogg");
-		soundMgr.addSoundBuffer(buffBeep);
-		SoundSource sourceBeep = new SoundSource(false, true);
-		sourceBeep.setBuffer(buffBeep.getBufferId());
-		soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
-
-		soundMgr.setListener(new SoundListener(new Vector3f(0, 0, 0)));
-
-		sourceBack.play();
-	}
-
-	private void setupLights() {
-		SceneLight sceneLight = new SceneLight();
-		scene.setSceneLight(sceneLight);
-
-		// Ambient Light
-		sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
-		sceneLight.setSkyBoxLight(new Vector3f(1.0f, 1.0f, 1.0f));
-
-		// Directional Light
-		float lightIntensity = 1.0f;
-		Vector3f lightDirection = new Vector3f(0, 1, 1);
-		DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), lightDirection, lightIntensity);
-		directionalLight.setShadowPosMult(10);
-		directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
-		sceneLight.setDirectionalLight(directionalLight);
-	}
-
 	@Override
 	public void input(Window window, MouseInput mouseInput) {
 		cameraInc.set(0, 0, 0);
@@ -223,6 +199,47 @@ public class Bokuseru implements IGameLogic {
 			angleInc = 0;
 		}
 
+	}
+
+	@Override
+	public void render(Window window) {
+		renderer.render(window, camera, scene);
+		hud.render(window);
+	}
+
+	private void setupLights() {
+		SceneLight sceneLight = new SceneLight();
+		scene.setSceneLight(sceneLight);
+
+		// Ambient Light
+		sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
+		sceneLight.setSkyBoxLight(new Vector3f(1.0f, 1.0f, 1.0f));
+
+		// Directional Light
+		float lightIntensity = 1.0f;
+		Vector3f lightDirection = new Vector3f(0, 1, 1);
+		DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), lightDirection, lightIntensity);
+		directionalLight.setShadowPosMult(10);
+		directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
+		sceneLight.setDirectionalLight(directionalLight);
+	}
+
+	private void setupSounds() throws Exception {
+		SoundBuffer buffBack = new SoundBuffer("/sounds/background.ogg");
+		soundMgr.addSoundBuffer(buffBack);
+		SoundSource sourceBack = new SoundSource(true, true);
+		sourceBack.setBuffer(buffBack.getBufferId());
+		soundMgr.addSoundSource(Sounds.MUSIC.toString(), sourceBack);
+
+		SoundBuffer buffBeep = new SoundBuffer("/sounds/beep.ogg");
+		soundMgr.addSoundBuffer(buffBeep);
+		SoundSource sourceBeep = new SoundSource(false, true);
+		sourceBeep.setBuffer(buffBeep.getBufferId());
+		soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
+
+		soundMgr.setListener(new SoundListener(new Vector3f(0, 0, 0)));
+
+		sourceBack.play();
 	}
 
 	@Override
@@ -270,22 +287,5 @@ public class Bokuseru implements IGameLogic {
 			this.hud.incCounter();
 		}
 		this.leftButtonPressed = aux;
-	}
-
-	@Override
-	public void render(Window window) {
-		renderer.render(window, camera, scene);
-		hud.render(window);
-	}
-
-	@Override
-	public void cleanup() {
-		renderer.cleanup();
-		soundMgr.cleanup();
-
-		scene.cleanup();
-		if (hud != null) {
-			hud.cleanup();
-		}
 	}
 }

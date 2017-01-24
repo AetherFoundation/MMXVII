@@ -46,16 +46,16 @@ public class ShadowMap {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	public Texture getDepthMapTexture() {
-		return depthMap;
+	public void cleanup() {
+		glDeleteFramebuffers(depthMapFBO);
+		depthMap.cleanup();
 	}
 
 	public int getDepthMapFBO() {
 		return depthMapFBO;
 	}
 
-	public void cleanup() {
-		glDeleteFramebuffers(depthMapFBO);
-		depthMap.cleanup();
+	public Texture getDepthMapTexture() {
+		return depthMap;
 	}
 }

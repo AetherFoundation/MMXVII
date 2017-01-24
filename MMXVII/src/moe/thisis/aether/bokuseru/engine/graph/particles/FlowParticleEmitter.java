@@ -40,6 +40,28 @@ public class FlowParticleEmitter implements IParticleEmitter {
 	}
 
 	@Override
+	public void cleanup() {
+		for (GameItem particle : getParticles()) {
+			particle.cleanup();
+		}
+	}
+
+	private void createParticle() {
+		Particle particle = new Particle(this.getBaseParticle());
+		// Add a little bit of randomness of the parrticle
+		float sign = Math.random() > 0.5d ? -1.0f : 1.0f;
+		float speedInc = sign * (float) Math.random() * this.speedRndRange;
+		float posInc = sign * (float) Math.random() * this.positionRndRange;
+		float scaleInc = sign * (float) Math.random() * this.scaleRndRange;
+		long updateAnimInc = (long) sign * (long) (Math.random() * (float) this.animRange);
+		particle.getPosition().add(posInc, posInc, posInc);
+		particle.getSpeed().add(speedInc, speedInc, speedInc);
+		particle.setScale(particle.getScale() + scaleInc);
+		particle.setUpdateTextureMills(particle.getUpdateTextureMillis() + updateAnimInc);
+		particles.add(particle);
+	}
+
+	@Override
 	public Particle getBaseParticle() {
 		return baseParticle;
 	}
@@ -69,6 +91,14 @@ public class FlowParticleEmitter implements IParticleEmitter {
 		return speedRndRange;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	public void setAnimRange(long animRange) {
 		this.animRange = animRange;
 	}
@@ -87,14 +117,6 @@ public class FlowParticleEmitter implements IParticleEmitter {
 
 	public void setScaleRndRange(float scaleRndRange) {
 		this.scaleRndRange = scaleRndRange;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	public void setSpeedRndRange(float speedRndRange) {
@@ -123,21 +145,6 @@ public class FlowParticleEmitter implements IParticleEmitter {
 		}
 	}
 
-	private void createParticle() {
-		Particle particle = new Particle(this.getBaseParticle());
-		// Add a little bit of randomness of the parrticle
-		float sign = Math.random() > 0.5d ? -1.0f : 1.0f;
-		float speedInc = sign * (float) Math.random() * this.speedRndRange;
-		float posInc = sign * (float) Math.random() * this.positionRndRange;
-		float scaleInc = sign * (float) Math.random() * this.scaleRndRange;
-		long updateAnimInc = (long) sign * (long) (Math.random() * (float) this.animRange);
-		particle.getPosition().add(posInc, posInc, posInc);
-		particle.getSpeed().add(speedInc, speedInc, speedInc);
-		particle.setScale(particle.getScale() + scaleInc);
-		particle.setUpdateTextureMills(particle.getUpdateTextureMillis() + updateAnimInc);
-		particles.add(particle);
-	}
-
 	/**
 	 * Updates a particle position
 	 * 
@@ -154,12 +161,5 @@ public class FlowParticleEmitter implements IParticleEmitter {
 		float dz = speed.z * delta;
 		Vector3f pos = particle.getPosition();
 		particle.setPosition(pos.x + dx, pos.y + dy, pos.z + dz);
-	}
-
-	@Override
-	public void cleanup() {
-		for (GameItem particle : getParticles()) {
-			particle.cleanup();
-		}
 	}
 }

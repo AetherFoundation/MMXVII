@@ -16,6 +16,23 @@ public class HeightMapMesh {
 
 	public static final float STARTZ = -0.5f;
 
+	public static int getRGB(int x, int z, int width, ByteBuffer buffer) {
+		byte r = buffer.get(x * 4 + 0 + z * 4 * width);
+		byte g = buffer.get(x * 4 + 1 + z * 4 * width);
+		byte b = buffer.get(x * 4 + 2 + z * 4 * width);
+		byte a = buffer.get(x * 4 + 3 + z * 4 * width);
+		int argb = ((0xFF & a) << 24) | ((0xFF & r) << 16) | ((0xFF & g) << 8) | (0xFF & b);
+		return argb;
+	}
+
+	public static float getXLength() {
+		return Math.abs(-STARTX * 2);
+	}
+
+	public static float getZLength() {
+		return Math.abs(-STARTZ * 2);
+	}
+
 	private final float minY;
 
 	private final float maxY;
@@ -77,28 +94,6 @@ public class HeightMapMesh {
 		this.mesh = new Mesh(posArr, textCoordsArr, normalsArr, indicesArr);
 		Material material = new Material(texture, 0.0f);
 		mesh.setMaterial(material);
-	}
-
-	public Mesh getMesh() {
-		return mesh;
-	}
-
-	public float getHeight(int row, int col) {
-		float result = 0;
-		if (row >= 0 && row < heightArray.length) {
-			if (col >= 0 && col < heightArray[row].length) {
-				result = heightArray[row][col];
-			}
-		}
-		return result;
-	}
-
-	public static float getXLength() {
-		return Math.abs(-STARTX * 2);
-	}
-
-	public static float getZLength() {
-		return Math.abs(-STARTZ * 2);
 	}
 
 	private float[] calcNormals(float[] posArr, int width, int height) {
@@ -173,18 +168,23 @@ public class HeightMapMesh {
 		return Utils.listToArray(normals);
 	}
 
+	public float getHeight(int row, int col) {
+		float result = 0;
+		if (row >= 0 && row < heightArray.length) {
+			if (col >= 0 && col < heightArray[row].length) {
+				result = heightArray[row][col];
+			}
+		}
+		return result;
+	}
+
 	private float getHeight(int x, int z, int width, ByteBuffer buffer) {
 		int argb = getRGB(x, z, width, buffer);
 		return this.minY + Math.abs(this.maxY - this.minY) * ((float) argb / (float) MAX_COLOUR);
 	}
 
-	public static int getRGB(int x, int z, int width, ByteBuffer buffer) {
-		byte r = buffer.get(x * 4 + 0 + z * 4 * width);
-		byte g = buffer.get(x * 4 + 1 + z * 4 * width);
-		byte b = buffer.get(x * 4 + 2 + z * 4 * width);
-		byte a = buffer.get(x * 4 + 3 + z * 4 * width);
-		int argb = ((0xFF & a) << 24) | ((0xFF & r) << 16) | ((0xFF & g) << 8) | (0xFF & b);
-		return argb;
+	public Mesh getMesh() {
+		return mesh;
 	}
 
 }

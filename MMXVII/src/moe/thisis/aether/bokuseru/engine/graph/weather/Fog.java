@@ -4,13 +4,13 @@ import org.joml.Vector3f;
 
 public class Fog {
 
+	public static Fog NOFOG = new Fog();
+
 	private boolean active;
 
 	private Vector3f colour;
 
 	private float density;
-
-	public static Fog NOFOG = new Fog();
 
 	public Fog() {
 		active = false;
@@ -22,6 +22,20 @@ public class Fog {
 		this.colour = colour;
 		this.density = density;
 		this.active = active;
+	}
+
+	/**
+	 * @return the colour
+	 */
+	public Vector3f getColour() {
+		return colour;
+	}
+
+	/**
+	 * @return the density
+	 */
+	public float getDensity() {
+		return density;
 	}
 
 	/**
@@ -40,25 +54,11 @@ public class Fog {
 	}
 
 	/**
-	 * @return the colour
-	 */
-	public Vector3f getColour() {
-		return colour;
-	}
-
-	/**
 	 * @param colour
 	 *            the colour to set
 	 */
 	public void setColour(Vector3f colour) {
 		this.colour = colour;
-	}
-
-	/**
-	 * @return the density
-	 */
-	public float getDensity() {
-		return density;
 	}
 
 	/**

@@ -22,16 +22,16 @@ public class AnimGameItem extends GameItem {
 		currentFrame = 0;
 	}
 
+	public AnimatedFrame getCurrentFrame() {
+		return this.frames.get(currentFrame);
+	}
+
 	public List<AnimatedFrame> getFrames() {
 		return frames;
 	}
 
-	public void setFrames(List<AnimatedFrame> frames) {
-		this.frames = frames;
-	}
-
-	public AnimatedFrame getCurrentFrame() {
-		return this.frames.get(currentFrame);
+	public List<Matrix4f> getInvJointMatrices() {
+		return invJointMatrices;
 	}
 
 	public AnimatedFrame getNextFrame() {
@@ -51,7 +51,7 @@ public class AnimGameItem extends GameItem {
 		}
 	}
 
-	public List<Matrix4f> getInvJointMatrices() {
-		return invJointMatrices;
+	public void setFrames(List<AnimatedFrame> frames) {
+		this.frames = frames;
 	}
 }

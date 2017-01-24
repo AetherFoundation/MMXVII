@@ -9,6 +9,28 @@ import moe.thisis.aether.bokuseru.engine.graph.HeightMapMesh;
 
 public class Terrain {
 
+	static class Box2D {
+
+		public float x;
+
+		public float y;
+
+		public float width;
+
+		public float height;
+
+		public Box2D(float x, float y, float width, float height) {
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+		}
+
+		public boolean contains(float x2, float y2) {
+			return x2 >= x && y2 >= y && x2 < x + width && y2 < y + height;
+		}
+	}
+
 	private final GameItem[] gameItems;
 
 	private final int terrainSize;
@@ -76,6 +98,34 @@ public class Terrain {
 		}
 	}
 
+	/**
+	 * Gets the bounding box of a terrain block
+	 *
+	 * @param terrainBlock
+	 *            A GameItem instance that defines the terrain block
+	 * @return The boundingg box of the terrain block
+	 */
+	private Box2D getBoundingBox(GameItem terrainBlock) {
+		float scale = terrainBlock.getScale();
+		Vector3f position = terrainBlock.getPosition();
+
+		float topLeftX = HeightMapMesh.STARTX * scale + position.x;
+		float topLeftZ = HeightMapMesh.STARTZ * scale + position.z;
+		float width = Math.abs(HeightMapMesh.STARTX * 2) * scale;
+		float height = Math.abs(HeightMapMesh.STARTZ * 2) * scale;
+		Box2D boundingBox = new Box2D(topLeftX, topLeftZ, width, height);
+		return boundingBox;
+	}
+
+	protected float getDiagonalZCoord(float x1, float z1, float x2, float z2, float x) {
+		float z = ((z1 - z2) / (x1 - x2)) * (x - x1) + z1;
+		return z;
+	}
+
+	public GameItem[] getGameItems() {
+		return gameItems;
+	}
+
 	public float getHeight(Vector3f position) {
 		float result = Float.MIN_VALUE;
 		// For each terrain block we get the bounding box, translate it to view
@@ -126,11 +176,6 @@ public class Terrain {
 		return triangle;
 	}
 
-	protected float getDiagonalZCoord(float x1, float z1, float x2, float z2, float x) {
-		float z = ((z1 - z2) / (x1 - x2)) * (x - x1) + z1;
-		return z;
-	}
-
 	protected float getWorldHeight(int row, int col, GameItem gameItem) {
 		float y = heightMapMesh.getHeight(row, col);
 		return y * gameItem.getScale() + gameItem.getPosition().y;
@@ -145,50 +190,5 @@ public class Terrain {
 		// y = (-d -ax -cz) / b
 		float y = (-d - a * x - c * z) / b;
 		return y;
-	}
-
-	/**
-	 * Gets the bounding box of a terrain block
-	 *
-	 * @param terrainBlock
-	 *            A GameItem instance that defines the terrain block
-	 * @return The boundingg box of the terrain block
-	 */
-	private Box2D getBoundingBox(GameItem terrainBlock) {
-		float scale = terrainBlock.getScale();
-		Vector3f position = terrainBlock.getPosition();
-
-		float topLeftX = HeightMapMesh.STARTX * scale + position.x;
-		float topLeftZ = HeightMapMesh.STARTZ * scale + position.z;
-		float width = Math.abs(HeightMapMesh.STARTX * 2) * scale;
-		float height = Math.abs(HeightMapMesh.STARTZ * 2) * scale;
-		Box2D boundingBox = new Box2D(topLeftX, topLeftZ, width, height);
-		return boundingBox;
-	}
-
-	public GameItem[] getGameItems() {
-		return gameItems;
-	}
-
-	static class Box2D {
-
-		public float x;
-
-		public float y;
-
-		public float width;
-
-		public float height;
-
-		public Box2D(float x, float y, float width, float height) {
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
-		}
-
-		public boolean contains(float x2, float y2) {
-			return x2 >= x && y2 >= y && x2 < x + width && y2 < y + height;
-		}
 	}
 }

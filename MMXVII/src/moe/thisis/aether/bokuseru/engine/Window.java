@@ -60,6 +60,19 @@ import org.lwjgl.opengl.GL;
 
 public class Window {
 
+	public static class WindowOptions {
+
+		public boolean cullFace;
+
+		public boolean showTriangles;
+
+		public boolean showFps;
+
+		public boolean compatibleProfile;
+
+		public boolean antialiasing;
+	}
+
 	/**
 	 * Field of View in Radians
 	 */
@@ -99,6 +112,38 @@ public class Window {
 		this.resized = false;
 		this.opts = opts;
 		projectionMatrix = new Matrix4f();
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public WindowOptions getOptions() {
+		return opts;
+	}
+
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public long getWindowHandle() {
+		return windowHandle;
+	}
+
+	public WindowOptions getWindowOptions() {
+		return opts;
+	}
+
+	public String getWindowTitle() {
+		return title;
 	}
 
 	public void init() {
@@ -206,69 +251,32 @@ public class Window {
 		}
 	}
 
-	public long getWindowHandle() {
-		return windowHandle;
-	}
-
-	public String getWindowTitle() {
-		return title;
-	}
-
-	public void setWindowTitle(String title) {
-		glfwSetWindowTitle(windowHandle, title);
-	}
-
-	public WindowOptions getWindowOptions() {
-		return opts;
-	}
-
-	public Matrix4f getProjectionMatrix() {
-		return projectionMatrix;
-	}
-
-	public Matrix4f updateProjectionMatrix() {
-		float aspectRatio = (float) width / (float) height;
-		return projectionMatrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
-	}
-
-	public void setClearColor(float r, float g, float b, float alpha) {
-		glClearColor(r, g, b, alpha);
-	}
-
 	public boolean isKeyPressed(int keyCode) {
 		return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
-	}
-
-	public boolean windowShouldClose() {
-		return glfwWindowShouldClose(windowHandle);
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
 	}
 
 	public boolean isResized() {
 		return resized;
 	}
 
-	public void setResized(boolean resized) {
-		this.resized = resized;
-	}
-
 	public boolean isvSync() {
 		return vSync;
 	}
 
+	public void setClearColor(float r, float g, float b, float alpha) {
+		glClearColor(r, g, b, alpha);
+	}
+
+	public void setResized(boolean resized) {
+		this.resized = resized;
+	}
+
 	public void setvSync(boolean vSync) {
 		this.vSync = vSync;
+	}
+
+	public void setWindowTitle(String title) {
+		glfwSetWindowTitle(windowHandle, title);
 	}
 
 	public void update() {
@@ -276,20 +284,12 @@ public class Window {
 		glfwPollEvents();
 	}
 
-	public WindowOptions getOptions() {
-		return opts;
+	public Matrix4f updateProjectionMatrix() {
+		float aspectRatio = (float) width / (float) height;
+		return projectionMatrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 	}
 
-	public static class WindowOptions {
-
-		public boolean cullFace;
-
-		public boolean showTriangles;
-
-		public boolean showFps;
-
-		public boolean compatibleProfile;
-
-		public boolean antialiasing;
+	public boolean windowShouldClose() {
+		return glfwWindowShouldClose(windowHandle);
 	}
 }

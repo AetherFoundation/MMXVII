@@ -18,6 +18,26 @@ import javax.imageio.ImageIO;
 
 public class FontTexture {
 
+	public static class CharInfo {
+
+		private final int startX;
+
+		private final int width;
+
+		public CharInfo(int startX, int width) {
+			this.startX = startX;
+			this.width = width;
+		}
+
+		public int getStartX() {
+			return startX;
+		}
+
+		public int getWidth() {
+			return width;
+		}
+	}
+
 	private static final String IMAGE_FORMAT = "png";
 
 	private final Font font;
@@ -38,33 +58,6 @@ public class FontTexture {
 		charMap = new HashMap<>();
 
 		buildTexture();
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public Texture getTexture() {
-		return texture;
-	}
-
-	public CharInfo getCharInfo(char c) {
-		return charMap.get(c);
-	}
-
-	private String getAllAvailableChars(String charsetName) {
-		CharsetEncoder ce = Charset.forName(charsetName).newEncoder();
-		StringBuilder result = new StringBuilder();
-		for (char c = 0; c < Character.MAX_VALUE; c++) {
-			if (ce.canEncode(c)) {
-				result.append(c);
-			}
-		}
-		return result.toString();
 	}
 
 	private void buildTexture() throws Exception {
@@ -108,23 +101,30 @@ public class FontTexture {
 		texture = new Texture(is);
 	}
 
-	public static class CharInfo {
-
-		private final int startX;
-
-		private final int width;
-
-		public CharInfo(int startX, int width) {
-			this.startX = startX;
-			this.width = width;
+	private String getAllAvailableChars(String charsetName) {
+		CharsetEncoder ce = Charset.forName(charsetName).newEncoder();
+		StringBuilder result = new StringBuilder();
+		for (char c = 0; c < Character.MAX_VALUE; c++) {
+			if (ce.canEncode(c)) {
+				result.append(c);
+			}
 		}
+		return result.toString();
+	}
 
-		public int getStartX() {
-			return startX;
-		}
+	public CharInfo getCharInfo(char c) {
+		return charMap.get(c);
+	}
 
-		public int getWidth() {
-			return width;
-		}
+	public int getHeight() {
+		return height;
+	}
+
+	public Texture getTexture() {
+		return texture;
+	}
+
+	public int getWidth() {
+		return width;
 	}
 }

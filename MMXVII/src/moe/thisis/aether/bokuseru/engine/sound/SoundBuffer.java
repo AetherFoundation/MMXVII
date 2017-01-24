@@ -36,12 +36,12 @@ public class SoundBuffer {
 		}
 	}
 
-	public int getBufferId() {
-		return this.bufferId;
-	}
-
 	public void cleanup() {
 		alDeleteBuffers(this.bufferId);
+	}
+
+	public int getBufferId() {
+		return this.bufferId;
 	}
 
 	private ShortBuffer readVorbis(String resource, int bufferSize, STBVorbisInfo info) throws Exception {

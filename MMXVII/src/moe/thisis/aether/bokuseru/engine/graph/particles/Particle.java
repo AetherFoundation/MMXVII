@@ -52,16 +52,16 @@ public class Particle extends GameItem {
 		return speed;
 	}
 
+	public long geTtl() {
+		return ttl;
+	}
+
 	public long getUpdateTextureMillis() {
 		return updateTextureMillis;
 	}
 
 	public void setSpeed(Vector3f speed) {
 		this.speed = speed;
-	}
-
-	public long geTtl() {
-		return ttl;
 	}
 
 	public void setTtl(long ttl) {

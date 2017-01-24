@@ -22,40 +22,40 @@ public class SceneLight {
 		return ambientLight;
 	}
 
-	public void setAmbientLight(Vector3f ambientLight) {
-		this.ambientLight = ambientLight;
+	public DirectionalLight getDirectionalLight() {
+		return directionalLight;
 	}
 
 	public PointLight[] getPointLightList() {
 		return pointLightList;
 	}
 
-	public void setPointLightList(PointLight[] pointLightList) {
-		this.pointLightList = pointLightList;
+	public Vector3f getSkyBoxLight() {
+		return skyBoxLight;
 	}
 
 	public SpotLight[] getSpotLightList() {
 		return spotLightList;
 	}
 
-	public void setSpotLightList(SpotLight[] spotLightList) {
-		this.spotLightList = spotLightList;
-	}
-
-	public DirectionalLight getDirectionalLight() {
-		return directionalLight;
+	public void setAmbientLight(Vector3f ambientLight) {
+		this.ambientLight = ambientLight;
 	}
 
 	public void setDirectionalLight(DirectionalLight directionalLight) {
 		this.directionalLight = directionalLight;
 	}
 
-	public Vector3f getSkyBoxLight() {
-		return skyBoxLight;
+	public void setPointLightList(PointLight[] pointLightList) {
+		this.pointLightList = pointLightList;
 	}
 
 	public void setSkyBoxLight(Vector3f skyBoxLight) {
 		this.skyBoxLight = skyBoxLight;
+	}
+
+	public void setSpotLightList(SpotLight[] spotLightList) {
+		this.spotLightList = spotLightList;
 	}
 
 }

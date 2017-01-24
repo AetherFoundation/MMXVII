@@ -89,17 +89,6 @@ public class InstancedMesh extends Mesh {
 	}
 
 	@Override
-	protected void initRender() {
-		super.initRender();
-
-		int start = 5;
-		int numElements = 4 * 2 + 2;
-		for (int i = 0; i < numElements; i++) {
-			glEnableVertexAttribArray(start + i);
-		}
-	}
-
-	@Override
 	protected void endRender() {
 		int start = 5;
 		int numElements = 4 * 2 + 2;
@@ -110,24 +99,15 @@ public class InstancedMesh extends Mesh {
 		super.endRender();
 	}
 
-	public void renderListInstanced(List<GameItem> gameItems, Transformation transformation, Matrix4f viewMatrix,
-			Matrix4f lightViewMatrix) {
-		renderListInstanced(gameItems, false, transformation, viewMatrix, lightViewMatrix);
-	}
+	@Override
+	protected void initRender() {
+		super.initRender();
 
-	public void renderListInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation,
-			Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
-		initRender();
-
-		int chunkSize = numInstances;
-		int length = gameItems.size();
-		for (int i = 0; i < length; i += chunkSize) {
-			int end = Math.min(length, i + chunkSize);
-			List<GameItem> subList = gameItems.subList(i, end);
-			renderChunkInstanced(subList, billBoard, transformation, viewMatrix, lightViewMatrix);
+		int start = 5;
+		int numElements = 4 * 2 + 2;
+		for (int i = 0; i < numElements; i++) {
+			glEnableVertexAttribArray(start + i);
 		}
-
-		endRender();
 	}
 
 	private void renderChunkInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation,
@@ -173,5 +153,25 @@ public class InstancedMesh extends Mesh {
 		glDrawElementsInstanced(GL_TRIANGLES, getVertexCount(), GL_UNSIGNED_INT, 0, gameItems.size());
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	public void renderListInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation,
+			Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
+		initRender();
+
+		int chunkSize = numInstances;
+		int length = gameItems.size();
+		for (int i = 0; i < length; i += chunkSize) {
+			int end = Math.min(length, i + chunkSize);
+			List<GameItem> subList = gameItems.subList(i, end);
+			renderChunkInstanced(subList, billBoard, transformation, viewMatrix, lightViewMatrix);
+		}
+
+		endRender();
+	}
+
+	public void renderListInstanced(List<GameItem> gameItems, Transformation transformation, Matrix4f viewMatrix,
+			Matrix4f lightViewMatrix) {
+		renderListInstanced(gameItems, false, transformation, viewMatrix, lightViewMatrix);
 	}
 }

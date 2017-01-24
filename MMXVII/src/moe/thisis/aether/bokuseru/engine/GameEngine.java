@@ -68,46 +68,11 @@ public class GameEngine implements Runnable {
 	}
 
 	/**
-	 * Start the game engine Handles thread launching differently for macOS
-	 */
-	public void start() {
-		String osName = System.getProperty("os.name");
-		if (osName.contains("Mac")) {
-			gameLoopThread.run();
-		} else {
-			gameLoopThread.start();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
+	 * Clear the state of the game logic
 	 * 
-	 * @see java.lang.Runnable#run()
 	 */
-	@Override
-	public void run() {
-		try {
-			init();
-			gameLoop();
-		} catch (Exception excp) {
-			excp.printStackTrace();
-		} finally {
-			cleanup();
-		}
-	}
-
-	/**
-	 * Initialize the game engine
-	 * 
-	 * @throws Exception
-	 */
-	protected void init() throws Exception {
-		window.init();
-		timer.init();
-		mouseInput.init(window);
-		gameLogic.init(window);
-		lastFps = timer.getTime();
-		fps = 0;
+	protected void cleanup() {
+		gameLogic.cleanup();
 	}
 
 	/**
@@ -140,11 +105,70 @@ public class GameEngine implements Runnable {
 	}
 
 	/**
-	 * Clear the state of the game logic
+	 * Initialize the game engine
+	 * 
+	 * @throws Exception
+	 */
+	protected void init() throws Exception {
+		window.init();
+		timer.init();
+		mouseInput.init(window);
+		gameLogic.init(window);
+		lastFps = timer.getTime();
+		fps = 0;
+	}
+
+	/**
+	 * Handle user input
 	 * 
 	 */
-	protected void cleanup() {
-		gameLogic.cleanup();
+	protected void input() {
+		mouseInput.input(window);
+		gameLogic.input(window, mouseInput);
+	}
+
+	/**
+	 * Render the game to the window
+	 * 
+	 */
+	protected void render() {
+		if (window.getWindowOptions().showFps && timer.getLastLoopTime() - lastFps > 1) {
+			lastFps = timer.getLastLoopTime();
+			window.setWindowTitle(windowTitle + " - " + fps + " FPS");
+			fps = 0;
+		}
+		fps++;
+		gameLogic.render(window);
+		window.update();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		try {
+			init();
+			gameLoop();
+		} catch (Exception excp) {
+			excp.printStackTrace();
+		} finally {
+			cleanup();
+		}
+	}
+
+	/**
+	 * Start the game engine Handles thread launching differently for macOS
+	 */
+	public void start() {
+		String osName = System.getProperty("os.name");
+		if (osName.contains("Mac")) {
+			gameLoopThread.run();
+		} else {
+			gameLoopThread.start();
+		}
 	}
 
 	/**
@@ -163,15 +187,6 @@ public class GameEngine implements Runnable {
 	}
 
 	/**
-	 * Handle user input
-	 * 
-	 */
-	protected void input() {
-		mouseInput.input(window);
-		gameLogic.input(window, mouseInput);
-	}
-
-	/**
 	 * Update the game logic
 	 * 
 	 * @param interval
@@ -179,21 +194,6 @@ public class GameEngine implements Runnable {
 	 */
 	protected void update(float interval) {
 		gameLogic.update(interval, mouseInput, window);
-	}
-
-	/**
-	 * Render the game to the window
-	 * 
-	 */
-	protected void render() {
-		if (window.getWindowOptions().showFps && timer.getLastLoopTime() - lastFps > 1) {
-			lastFps = timer.getLastLoopTime();
-			window.setWindowTitle(windowTitle + " - " + fps + " FPS");
-			fps = 0;
-		}
-		fps++;
-		gameLogic.render(window);
-		window.update();
 	}
 
 }

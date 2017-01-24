@@ -7,10 +7,8 @@ import java.util.Map;
 
 import moe.thisis.aether.bokuseru.engine.graph.InstancedMesh;
 import moe.thisis.aether.bokuseru.engine.graph.Mesh;
-import moe.thisis.aether.bokuseru.engine.graph.particles.IParticleEmitter;
 import moe.thisis.aether.bokuseru.engine.graph.weather.Fog;
 import moe.thisis.aether.bokuseru.engine.items.GameItem;
-import moe.thisis.aether.bokuseru.engine.items.SkyBox;
 
 public class Scene {
 
@@ -18,15 +16,11 @@ public class Scene {
 
 	private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
 
-	private SkyBox skyBox;
-
 	private SceneLight sceneLight;
 
 	private Fog fog;
 
 	private boolean renderShadows;
-
-	private IParticleEmitter[] particleEmitters;
 
 	/** Scene Constructor
 	 * 
@@ -47,11 +41,6 @@ public class Scene {
 		}
 		for (final Mesh mesh : instancedMeshMap.keySet()) {
 			mesh.cleanUp();
-		}
-		if (particleEmitters != null) {
-			for (final IParticleEmitter particleEmitter : particleEmitters) {
-				particleEmitter.cleanup();
-			}
 		}
 	}
 
@@ -77,24 +66,10 @@ public class Scene {
 	}
 
 	/**
-	 * @return	Particle emitters in scene
-	 */
-	public IParticleEmitter[] getParticleEmitters() {
-		return particleEmitters;
-	}
-
-	/**
 	 * @return	Current scene light
 	 */
 	public SceneLight getSceneLight() {
 		return sceneLight;
-	}
-
-	/**
-	 * @return	Current skybox
-	 */
-	public SkyBox getSkyBox() {
-		return skyBox;
 	}
 
 	/**
@@ -138,13 +113,6 @@ public class Scene {
 	}
 
 	/**
-	 * @param particleEmitters	Particle emitters to use
-	 */
-	public void setParticleEmitters(final IParticleEmitter[] particleEmitters) {
-		this.particleEmitters = particleEmitters;
-	}
-
-	/**
 	 * @param renderShadows	Enable or disable render shadows
 	 */
 	public void setRenderShadows(final boolean renderShadows) {
@@ -156,13 +124,6 @@ public class Scene {
 	 */
 	public void setSceneLight(final SceneLight sceneLight) {
 		this.sceneLight = sceneLight;
-	}
-
-	/**
-	 * @param skyBox	Skybox to use
-	 */
-	public void setSkyBox(final SkyBox skyBox) {
-		this.skyBox = skyBox;
 	}
 
 }

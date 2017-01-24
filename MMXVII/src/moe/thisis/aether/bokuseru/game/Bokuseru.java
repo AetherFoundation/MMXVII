@@ -205,7 +205,6 @@ public class Bokuseru implements IGameLogic {
 
 		// Ambient Light
 		sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
-		sceneLight.setSkyBoxLight(new Vector3f(1.0f, 1.0f, 1.0f));
 
 		// Directional Light
 		final float lightIntensity = 1.0f;

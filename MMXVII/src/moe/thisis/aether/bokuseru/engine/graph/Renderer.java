@@ -15,14 +15,10 @@ import moe.thisis.aether.bokuseru.engine.Scene;
 import moe.thisis.aether.bokuseru.engine.SceneLight;
 import moe.thisis.aether.bokuseru.engine.Utils;
 import moe.thisis.aether.bokuseru.engine.Window;
-import moe.thisis.aether.bokuseru.engine.graph.anim.AnimGameItem;
-import moe.thisis.aether.bokuseru.engine.graph.anim.AnimatedFrame;
 import moe.thisis.aether.bokuseru.engine.graph.lights.DirectionalLight;
 import moe.thisis.aether.bokuseru.engine.graph.lights.PointLight;
 import moe.thisis.aether.bokuseru.engine.graph.lights.SpotLight;
-import moe.thisis.aether.bokuseru.engine.graph.particles.IParticleEmitter;
 import moe.thisis.aether.bokuseru.engine.items.GameItem;
-import moe.thisis.aether.bokuseru.engine.items.SkyBox;
 
 public class Renderer {
 
@@ -38,10 +34,6 @@ public class Renderer {
 
 	private ShaderProgram sceneShaderProgram;
 
-	private ShaderProgram skyBoxShaderProgram;
-
-	private ShaderProgram particlesShaderProgram;
-
 	private final float specularPower;
 
 	public Renderer() {
@@ -56,35 +48,14 @@ public class Renderer {
 		if (depthShaderProgram != null) {
 			depthShaderProgram.cleanup();
 		}
-		if (skyBoxShaderProgram != null) {
-			skyBoxShaderProgram.cleanup();
-		}
 		if (sceneShaderProgram != null) {
 			sceneShaderProgram.cleanup();
-		}
-		if (particlesShaderProgram != null) {
-			particlesShaderProgram.cleanup();
 		}
 	}
 
 	public void clear() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 	}
-
-	/*
-	 * private void setupParticlesShader() throws Exception {
-	 * particlesShaderProgram = new ShaderProgram();
-	 * particlesShaderProgram.createVertexShader(Utils.loadResource(
-	 * "/shaders/particles_vertex.vs"));
-	 * particlesShaderProgram.createFragmentShader(Utils.loadResource(
-	 * "/shaders/particles_fragment.fs")); particlesShaderProgram.link();
-	 *
-	 * particlesShaderProgram.createUniform("projectionMatrix");
-	 * particlesShaderProgram.createUniform("texture_sampler");
-	 *
-	 * particlesShaderProgram.createUniform("numCols");
-	 * particlesShaderProgram.createUniform("numRows"); }
-	 */
 
 	public void init(final Window window) throws Exception {
 		shadowMap = new ShadowMap();
@@ -94,23 +65,6 @@ public class Renderer {
 		setupSceneShader();
 		// setupParticlesShader();
 	}
-
-	/*
-	 * private void setupSkyBoxShader() throws Exception { skyBoxShaderProgram =
-	 * new ShaderProgram();
-	 * skyBoxShaderProgram.createVertexShader(Utils.loadResource(
-	 * "/shaders/sb_vertex.vs"));
-	 * skyBoxShaderProgram.createFragmentShader(Utils.loadResource(
-	 * "/shaders/sb_fragment.fs")); skyBoxShaderProgram.link();
-	 *
-	 * // Create uniforms for projection matrix
-	 * skyBoxShaderProgram.createUniform("projectionMatrix");
-	 * skyBoxShaderProgram.createUniform("modelViewMatrix");
-	 * skyBoxShaderProgram.createUniform("texture_sampler");
-	 * skyBoxShaderProgram.createUniform("ambientLight");
-	 * skyBoxShaderProgram.createUniform("colour");
-	 * skyBoxShaderProgram.createUniform("hasTexture"); }
-	 */
 
 	public void render(final Window window, final Camera camera, final Scene scene) {
 		clear();
@@ -124,8 +78,6 @@ public class Renderer {
 		window.updateProjectionMatrix();
 
 		renderScene(window, camera, scene);
-		renderSkyBox(window, camera, scene);
-		renderParticles(window, camera, scene);
 
 		// renderAxes(camera);
 		renderCrossHair(window);
@@ -295,45 +247,8 @@ public class Renderer {
 						lightViewMatrix);
 				sceneShaderProgram.setUniform("modelLightViewNonInstancedMatrix", modelLightViewMatrix);
 
-				if (gameItem instanceof AnimGameItem) {
-					final AnimGameItem animGameItem = (AnimGameItem) gameItem;
-					final AnimatedFrame frame = animGameItem.getCurrentFrame();
-					shader.setUniform("jointsMatrix", frame.getJointMatrices());
-				}
 			});
 		}
-	}
-
-	private void renderParticles(final Window window, final Camera camera, final Scene scene) {
-		particlesShaderProgram.bind();
-
-		particlesShaderProgram.setUniform("texture_sampler", 0);
-		final Matrix4f projectionMatrix = window.getProjectionMatrix();
-		particlesShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-
-		final Matrix4f viewMatrix = camera.getViewMatrix();
-		final IParticleEmitter[] emitters = scene.getParticleEmitters();
-		final int numEmitters = emitters != null ? emitters.length : 0;
-
-		GL11.glDepthMask(false);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-
-		new Matrix3f();
-		for (int i = 0; i < numEmitters; i++) {
-			final IParticleEmitter emitter = emitters[i];
-			final InstancedMesh mesh = (InstancedMesh) emitter.getBaseParticle().getMesh();
-
-			final Texture text = mesh.getMaterial().getTexture();
-			particlesShaderProgram.setUniform("numCols", text.getNumCols());
-			particlesShaderProgram.setUniform("numRows", text.getNumRows());
-
-			mesh.renderListInstanced(emitter.getParticles(), true, transformation, viewMatrix, null);
-		}
-
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDepthMask(true);
-
-		particlesShaderProgram.unbind();
 	}
 
 	public void renderScene(final Window window, final Camera camera, final Scene scene) {
@@ -360,39 +275,6 @@ public class Renderer {
 		renderInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
 
 		sceneShaderProgram.unbind();
-	}
-
-	private void renderSkyBox(final Window window, final Camera camera, final Scene scene) {
-		final SkyBox skyBox = scene.getSkyBox();
-		if (skyBox != null) {
-			skyBoxShaderProgram.bind();
-
-			skyBoxShaderProgram.setUniform("texture_sampler", 0);
-
-			final Matrix4f projectionMatrix = window.getProjectionMatrix();
-			skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-			final Matrix4f viewMatrix = camera.getViewMatrix();
-			final float m30 = viewMatrix.m30();
-			viewMatrix.m30(0);
-			final float m31 = viewMatrix.m31();
-			viewMatrix.m31(0);
-			final float m32 = viewMatrix.m32();
-			viewMatrix.m32(0);
-
-			final Mesh mesh = skyBox.getMesh();
-			final Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
-			skyBoxShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-			skyBoxShaderProgram.setUniform("ambientLight", scene.getSceneLight().getSkyBoxLight());
-			skyBoxShaderProgram.setUniform("colour", mesh.getMaterial().getColour());
-			skyBoxShaderProgram.setUniform("hasTexture", mesh.getMaterial().isTextured() ? 1 : 0);
-
-			mesh.render();
-
-			viewMatrix.m30(m30);
-			viewMatrix.m31(m31);
-			viewMatrix.m32(m32);
-			skyBoxShaderProgram.unbind();
-		}
 	}
 
 	private void setupDepthShader() throws Exception {

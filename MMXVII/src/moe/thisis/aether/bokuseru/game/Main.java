@@ -16,23 +16,16 @@ public class Main {
 	public static void main(final String[] args) {
 		try {
 			final boolean vSync = true; // enable vertical synchronization
-			final IGameLogic gameLogic = new Bokuseru(); // specify which game
-															// logic
-			// the engine will run
-			final Window.WindowOptions opts = new Window.WindowOptions(); // create
-			// the GLFW
-			// window
+			// specify which game logic the engine will run
+			final IGameLogic gameLogic = new Bokuseru();
+			// create the GLFW window
+			final Window.WindowOptions opts = new Window.WindowOptions();
 			opts.cullFace = true;
 			opts.showFps = true;
 			opts.compatibleProfile = true;
 			opts.antialiasing = true; // smooth sharp edges
-			final GameEngine gameEng = new GameEngine("Bokuseru", vSync, opts, gameLogic); // specify
-																							// which
-																							// game
-																							// the
-																							// engine
-																							// will
-																							// run
+			// specify which game the engine will run
+			final GameEngine gameEng = new GameEngine("Bokuseru", vSync, opts, gameLogic);
 			gameEng.start();
 		} catch (final Exception excp) {
 			excp.printStackTrace();

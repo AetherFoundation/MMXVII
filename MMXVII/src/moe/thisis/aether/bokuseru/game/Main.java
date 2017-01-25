@@ -23,6 +23,7 @@ public class Main {
 			opts.cullFace = true;
 			opts.showFps = true;
 			opts.compatibleProfile = true;
+			opts.showTriangles = false;
 			opts.antialiasing = true; // smooth sharp edges
 			// specify which game the engine will run
 			final GameEngine gameEng = new GameEngine("Bokuseru", vSync, opts, gameLogic);

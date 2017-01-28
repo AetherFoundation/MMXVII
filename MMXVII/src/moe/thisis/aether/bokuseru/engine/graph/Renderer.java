@@ -36,11 +36,17 @@ public class Renderer {
 
 	private final float specularPower;
 
+	/** Renderer
+	 * 
+	 */
 	public Renderer() {
 		transformation = new Transformation();
 		specularPower = 10f;
 	}
 
+	/** Clean up renderer
+	 * 
+	 */
 	public void cleanup() {
 		if (shadowMap != null) {
 			shadowMap.cleanup();
@@ -53,10 +59,17 @@ public class Renderer {
 		}
 	}
 
+	/** Clear render
+	 * 
+	 */
 	public void clear() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 	}
 
+	/** Initialize renderer
+	 * @param window	Window to render to
+	 * @throws Exception
+	 */
 	public void init(final Window window) throws Exception {
 		shadowMap = new ShadowMap();
 
@@ -66,6 +79,11 @@ public class Renderer {
 		// setupParticlesShader();
 	}
 
+	/** Render scene
+	 * @param window	Window to render to
+	 * @param camera	Camera to render from
+	 * @param scene	Scene to render
+	 */
 	public void render(final Window window, final Camera camera, final Scene scene) {
 		clear();
 
@@ -83,6 +101,9 @@ public class Renderer {
 		renderCrossHair(window);
 	}
 
+	/** Render crosshair
+	 * @param window	Window to render to
+	 */
 	private void renderCrossHair(final Window window) {
 		if (window.getWindowOptions().compatibleProfile) {
 			GL11.glPushMatrix();
@@ -110,6 +131,11 @@ public class Renderer {
 		}
 	}
 
+	/** Render depth map
+	 * @param window	Window to render to
+	 * @param camera	Camera to render from
+	 * @param scene	Scene to render
+	 */
 	private void renderDepthMap(final Window window, final Camera camera, final Scene scene) {
 		if (scene.isRenderShadows()) {
 			// Setup view port to match the texture size
@@ -144,6 +170,12 @@ public class Renderer {
 		}
 	}
 
+	/** Render instanced meshes
+	 * @param scene	Scene to render
+	 * @param shader	Shader to render with
+	 * @param viewMatrix	View matrix
+	 * @param lightViewMatrix	Light view matrix
+	 */
 	private void renderInstancedMeshes(final Scene scene, final ShaderProgram shader, final Matrix4f viewMatrix,
 			final Matrix4f lightViewMatrix) {
 		shader.setUniform("isInstanced", 1);
@@ -166,6 +198,10 @@ public class Renderer {
 		}
 	}
 
+	/** Render lights
+	 * @param viewMatrix	View matrix
+	 * @param sceneLight	Scene light
+	 */
 	private void renderLights(final Matrix4f viewMatrix, final SceneLight sceneLight) {
 
 		sceneShaderProgram.setUniform("ambientLight", sceneLight.getAmbientLight());
@@ -217,6 +253,12 @@ public class Renderer {
 		sceneShaderProgram.setUniform("directionalLight", currDirLight);
 	}
 
+	/** Render non-instanced meshes
+	 * @param scene	Scene to render
+	 * @param shader	Shader to render with
+	 * @param viewMatrix	View matrix
+	 * @param lightViewMatrix	Light view matrix
+	 */
 	private void renderNonInstancedMeshes(final Scene scene, final ShaderProgram shader, final Matrix4f viewMatrix,
 			final Matrix4f lightViewMatrix) {
 		sceneShaderProgram.setUniform("isInstanced", 0);
@@ -251,6 +293,11 @@ public class Renderer {
 		}
 	}
 
+	/** Render scene
+	 * @param window	Window to render to
+	 * @param camera	Camera to render from
+	 * @param scene	Scene to render
+	 */
 	public void renderScene(final Window window, final Camera camera, final Scene scene) {
 		sceneShaderProgram.bind();
 
@@ -277,6 +324,9 @@ public class Renderer {
 		sceneShaderProgram.unbind();
 	}
 
+	/** Set up depth shader
+	 * @throws Exception
+	 */
 	private void setupDepthShader() throws Exception {
 		depthShaderProgram = new ShaderProgram();
 		depthShaderProgram.createVertexShader(Utils.loadResource("/shaders/depth_vertex.vs"));
@@ -289,6 +339,9 @@ public class Renderer {
 		depthShaderProgram.createUniform("orthoProjectionMatrix");
 	}
 
+	/** Set up scene shader
+	 * @throws Exception
+	 */
 	private void setupSceneShader() throws Exception {
 		// Create shader
 		sceneShaderProgram = new ShaderProgram();

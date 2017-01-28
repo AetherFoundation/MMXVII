@@ -20,12 +20,22 @@ public class Mesh {
 
 	public static final int MAX_WEIGHTS = 4;
 
+	/** Create empty float array
+	 * @param length	Array length
+	 * @param defaultValue	Default array value
+	 * @return	Filled array
+	 */
 	protected static float[] createEmptyFloatArray(final int length, final float defaultValue) {
 		final float[] result = new float[length];
 		Arrays.fill(result, defaultValue);
 		return result;
 	}
 
+	/** Create empty int array
+	 * @param length	Array length
+	 * @param defaultValue	Default array value
+	 * @return	Filled array
+	 */
 	protected static int[] createEmptyIntArray(final int length, final int defaultValue) {
 		final int[] result = new int[length];
 		Arrays.fill(result, defaultValue);
@@ -40,12 +50,26 @@ public class Mesh {
 
 	private Material material;
 
+	/** Mesh constructor
+	 * @param positions	Mesh positions
+	 * @param textCoords	Text coordinates
+	 * @param normals	Normal map
+	 * @param indices	Indices
+	 */
 	public Mesh(final float[] positions, final float[] textCoords, final float[] normals, final int[] indices) {
 		this(positions, textCoords, normals, indices,
 				Mesh.createEmptyIntArray((Mesh.MAX_WEIGHTS * positions.length) / 3, 0),
 				Mesh.createEmptyFloatArray((Mesh.MAX_WEIGHTS * positions.length) / 3, 0));
 	}
 
+	/** Mesh constructor
+	 * @param positions	Mesh positions
+	 * @param textCoords	Text coordinates
+	 * @param normals	Normal map
+	 * @param indices	Indices
+	 * @param jointIndices	Joint indices
+	 * @param weights	Weights
+	 */
 	public Mesh(final float[] positions, final float[] textCoords, final float[] normals, final int[] indices,
 			final int[] jointIndices, final float[] weights) {
 		vertexCount = indices.length;
@@ -111,6 +135,9 @@ public class Mesh {
 		GL30.glBindVertexArray(0);
 	}
 
+	/** Clean up a mesh
+	 * 
+	 */
 	public void cleanUp() {
 		GL20.glDisableVertexAttribArray(0);
 
@@ -131,6 +158,9 @@ public class Mesh {
 		GL30.glDeleteVertexArrays(vaoId);
 	}
 
+	/** Delete buffers
+	 * 
+	 */
 	public void deleteBuffers() {
 		GL20.glDisableVertexAttribArray(0);
 
@@ -145,6 +175,9 @@ public class Mesh {
 		GL30.glDeleteVertexArrays(vaoId);
 	}
 
+	/** End rendering
+	 * 
+	 */
 	protected void endRender() {
 		// Restore state
 		GL20.glDisableVertexAttribArray(0);
@@ -157,18 +190,30 @@ public class Mesh {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	}
 
+	/** Get material
+	 * @return	Material
+	 */
 	public Material getMaterial() {
 		return material;
 	}
 
+	/** Get VAO ID
+	 * @return	VAO ID
+	 */
 	public final int getVaoId() {
 		return vaoId;
 	}
 
+	/** Get vertex count
+	 * @return	Vertex count
+	 */
 	public int getVertexCount() {
 		return vertexCount;
 	}
 
+	/** Initialize rendering
+	 * 
+	 */
 	protected void initRender() {
 		final Texture texture = material.getTexture();
 		if (texture != null) {
@@ -194,6 +239,9 @@ public class Mesh {
 		GL20.glEnableVertexAttribArray(4);
 	}
 
+	/** Render mesh
+	 * 
+	 */
 	public void render() {
 		initRender();
 
@@ -202,6 +250,10 @@ public class Mesh {
 		endRender();
 	}
 
+	/** Render list
+	 * @param gameItems Game items
+	 * @param consumer	Consumer
+	 */
 	public void renderList(final List<GameItem> gameItems, final Consumer<GameItem> consumer) {
 		initRender();
 
@@ -215,6 +267,9 @@ public class Mesh {
 		endRender();
 	}
 
+	/** Set mesh material
+	 * @param material	Material
+	 */
 	public void setMaterial(final Material material) {
 		this.material = material;
 	}

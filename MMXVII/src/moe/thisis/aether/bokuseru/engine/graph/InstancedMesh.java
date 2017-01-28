@@ -35,6 +35,13 @@ public class InstancedMesh extends Mesh {
 
 	private final FloatBuffer instanceDataBuffer;
 
+	/** Instanced Mesh Constructor
+	 * @param positions	Mesh positions
+	 * @param textCoords	Text coordinates
+	 * @param normals	Normal map
+	 * @param indices	Indices
+	 * @param numInstances	Number of instances
+	 */
 	public InstancedMesh(final float[] positions, final float[] textCoords, final float[] normals, final int[] indices,
 			final int numInstances) {
 		super(positions, textCoords, normals, indices,
@@ -82,6 +89,9 @@ public class InstancedMesh extends Mesh {
 		GL30.glBindVertexArray(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see moe.thisis.aether.bokuseru.engine.graph.Mesh#endRender()
+	 */
 	@Override
 	protected void endRender() {
 		final int start = 5;
@@ -93,6 +103,9 @@ public class InstancedMesh extends Mesh {
 		super.endRender();
 	}
 
+	/* (non-Javadoc)
+	 * @see moe.thisis.aether.bokuseru.engine.graph.Mesh#initRender()
+	 */
 	@Override
 	protected void initRender() {
 		super.initRender();
@@ -104,6 +117,13 @@ public class InstancedMesh extends Mesh {
 		}
 	}
 
+	/** Render chunk instance
+	 * @param gameItems	Game items
+	 * @param billBoard	Bill board
+	 * @param transformation	Transformation
+	 * @param viewMatrix	View matrix
+	 * @param lightViewMatrix	Light view matrix
+	 */
 	private void renderChunkInstanced(final List<GameItem> gameItems, final boolean billBoard,
 			final Transformation transformation, final Matrix4f viewMatrix, final Matrix4f lightViewMatrix) {
 		instanceDataBuffer.clear();
@@ -151,6 +171,13 @@ public class InstancedMesh extends Mesh {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 
+	/** Render list instance
+	 * @param gameItems	Game items
+	 * @param billBoard	Bill board
+	 * @param transformation	Transformation
+	 * @param viewMatrix	View matrix
+	 * @param lightViewMatrix	Light view matrix
+	 */
 	public void renderListInstanced(final List<GameItem> gameItems, final boolean billBoard,
 			final Transformation transformation, final Matrix4f viewMatrix, final Matrix4f lightViewMatrix) {
 		initRender();
@@ -166,6 +193,12 @@ public class InstancedMesh extends Mesh {
 		endRender();
 	}
 
+	/** Render list instance
+	 * @param gameItems	Game items
+	 * @param transformation	Transformation
+	 * @param viewMatrix	View matrix
+	 * @param lightViewMatrix	Light view matrix
+	 */
 	public void renderListInstanced(final List<GameItem> gameItems, final Transformation transformation,
 			final Matrix4f viewMatrix, final Matrix4f lightViewMatrix) {
 		renderListInstanced(gameItems, false, transformation, viewMatrix, lightViewMatrix);

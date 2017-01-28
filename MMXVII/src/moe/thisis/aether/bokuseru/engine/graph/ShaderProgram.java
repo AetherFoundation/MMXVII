@@ -26,6 +26,9 @@ public class ShaderProgram {
 
 	private final Map<String, UniformData> uniforms;
 
+	/** Shader Program
+	 * @throws Exception
+	 */
 	public ShaderProgram() throws Exception {
 		programId = GL20.glCreateProgram();
 		if (programId == 0) {
@@ -34,10 +37,16 @@ public class ShaderProgram {
 		uniforms = new HashMap<>();
 	}
 
+	/** Bind shader program
+	 * 
+	 */
 	public void bind() {
 		GL20.glUseProgram(programId);
 	}
 
+	/** Clean up shader
+	 * 
+	 */
 	public void cleanup() {
 		unbind();
 		if (programId != 0) {
@@ -45,22 +54,38 @@ public class ShaderProgram {
 		}
 	}
 
+	/** Create uniform directional light
+	 * @param uniformName	Uniform name
+	 * @throws Exception
+	 */
 	public void createDirectionalLightUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".direction");
 		createUniform(uniformName + ".intensity");
 	}
 
+	/** Create uniform fog
+	 * @param uniformName	Uniform name
+	 * @throws Exception
+	 */
 	public void createFogUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".activeFog");
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".density");
 	}
 
+	/** Create fragment shader
+	 * @param shaderCode	Shader code
+	 * @throws Exception
+	 */
 	public void createFragmentShader(final String shaderCode) throws Exception {
 		fragmentShaderId = createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
 	}
 
+	/** Create uniform material
+	 * @param uniformName	Uniform name
+	 * @throws Exception
+	 */
 	public void createMaterialUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".hasTexture");
@@ -68,12 +93,21 @@ public class ShaderProgram {
 		createUniform(uniformName + ".reflectance");
 	}
 
+	/** Create uniform point light list
+	 * @param uniformName	Uniform name
+	 * @param size	List size
+	 * @throws Exception
+	 */
 	public void createPointLightListUniform(final String uniformName, final int size) throws Exception {
 		for (int i = 0; i < size; i++) {
 			createPointLightUniform(uniformName + "[" + i + "]");
 		}
 	}
 
+	/** Create uniform point light
+	 * @param uniformName	Uniform name
+	 * @throws Exception
+	 */
 	public void createPointLightUniform(final String uniformName) throws Exception {
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".position");
@@ -83,6 +117,12 @@ public class ShaderProgram {
 		createUniform(uniformName + ".att.exponent");
 	}
 
+	/** Create shader
+	 * @param shaderCode	Shader code
+	 * @param shaderType	Shader type
+	 * @return	Shader
+	 * @throws Exception
+	 */
 	protected int createShader(final String shaderCode, final int shaderType) throws Exception {
 		final int shaderId = GL20.glCreateShader(shaderType);
 		if (shaderId == 0) {
